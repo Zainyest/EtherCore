@@ -1,6 +1,11 @@
 package zainyest.ethercore.util;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import zainyest.ethercore.networking.ModPackets;
 
 public class EtherData {
     public static void setMaxEther(IEntityDataSaver player, int amount) {
@@ -27,7 +32,7 @@ public class EtherData {
         }
 
         nbt.putInt("ether", ether);
-        // SYNC HERE
+        syncEther(ether, (ServerPlayerEntity) player);
         return ether;
     }
     public static int removeEther(IEntityDataSaver player, int amount) {
@@ -40,7 +45,15 @@ public class EtherData {
         }
 
         nbt.putInt("ether", ether);
-        // SYNC HERE
+
+        syncEther(ether, (ServerPlayerEntity) player);
         return ether;
+    }
+
+    public static void  syncEther(int ether, ServerPlayerEntity player) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeInt(ether);
+        buffer.writeInt(((IEntityDataSaver) player).getPersistentData().getInt("maxEther"));
+        ServerPlayNetworking.send(player, ModPackets.ETHER_SYNC_ID, buffer);
     }
 }

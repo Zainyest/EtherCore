@@ -16,8 +16,4 @@ public class ModPackets {
         ServerPlayNetworking.registerGlobalReceiver(MENU_OPEN_ID, MenuUpdaterC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(CAST_ETHER_BOLT_ID, CastEtherBoltC2SPacket::receive);
     }
-
-    public static void registerS2CPackets() {
-
-    }
 }
