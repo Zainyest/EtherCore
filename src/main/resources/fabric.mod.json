@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "ethercore",
+	"version": "${version}",
+	"name": "EtherCore",
+	"description": "A cultivation based magic system engine with high customizability and lore.",
+	"authors": [
+		"Zainyest"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/Zainyest/EtherCore"
+	},
+	"license": "MIT License",
+	"icon": "assets/template-mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+          "zainyest.ethercore.EtherCore"
+		],
+		"client": [
+			"zainyest.ethercore.EtherCoreClient"
+		]
+	},
+	"mixins": [
+		"ethercore.mixins.json",
+		{
+			"config": "ethercore.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.14.17",
+		"minecraft": "~1.19.3",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
