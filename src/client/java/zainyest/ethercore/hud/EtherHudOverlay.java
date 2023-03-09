@@ -6,9 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.EtherData;
@@ -35,17 +33,18 @@ public class EtherHudOverlay implements HudRenderCallback {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, EMPTY_ETHER);
         for (int i = 0; i < 10; i++) {
-            DrawableHelper.drawTexture(matrixStack, x - 94 + (i*9), y-54, 0, 0, 12, 12, 12 ,12);
+            DrawableHelper.drawTexture(matrixStack, x - 93 + (i*8), y-53, 0, 0, 12, 12, 12 ,12);
         }
 
         RenderSystem.setShaderTexture(0, FILLED_ETHER);
 
 
-        assert MinecraftClient.getInstance().player != null;
-        float percentFilled = ((float) EtherData.getEther((IEntityDataSaver) MinecraftClient.getInstance().player)) / ((float) EtherData.getMaxEther((IEntityDataSaver) MinecraftClient.getInstance().player));
+        assert client != null;
+        assert client.player != null;
+        float percentFilled = ((float) EtherData.ETHER.getVal((IEntityDataSaver) client.player)) / ((float) EtherData.ETHER.getMax((IEntityDataSaver) client.player));
         for (int i = 0; i < 10; i++) {
             if ((percentFilled * 10.0f) > i) {
-                DrawableHelper.drawTexture(matrixStack, x - 94 + (i*9), y-54, 0, 0, 12, 12, 12 ,12);
+                DrawableHelper.drawTexture(matrixStack, x - 93 + (i*8), y-53, 0, 0, 12, 12, 12 ,12);
             } else {
                 break;
             }

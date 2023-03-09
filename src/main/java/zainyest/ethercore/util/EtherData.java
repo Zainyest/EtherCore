@@ -1,59 +1,24 @@
 package zainyest.ethercore.util;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.NbtCompound;
+
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import zainyest.ethercore.networking.ModPackets;
 
 public class EtherData {
-    public static void setMaxEther(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.getPersistentData();
-        nbt.putInt("maxEther", amount);
+    // Instanced pools
+    public static EtherPool ETHER = new EtherPool("ether");
+    public static EtherPool STAMINA = new EtherPool("stamina");
+    public static EtherPool MENTAL_ENERGY = new EtherPool("mental_energy");
+
+    public static void c2s(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        //only happens on server
     }
-    public static int getMaxEther(IEntityDataSaver player) {
-        NbtCompound nbt = player.getPersistentData();
-        return nbt.getInt("maxEther");
-    }
-
-    public static int getEther(IEntityDataSaver player) {
-        NbtCompound nbt = player.getPersistentData();
-        return nbt.getInt("ether");
-    }
-
-    public static int addEther(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.getPersistentData();
-        int ether = nbt.getInt("ether");
-        if (ether + amount >= nbt.getInt("maxEther")) {
-            ether = nbt.getInt("maxEther");
-        } else {
-            ether += amount;
-        }
-
-        nbt.putInt("ether", ether);
-        syncEther(ether, (ServerPlayerEntity) player);
-        return ether;
-    }
-    public static int removeEther(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.getPersistentData();
-        int ether = nbt.getInt("ether");
-        if (ether - amount < 0) {
-            ether = 0;
-        } else {
-            ether -= amount;
-        }
-
-        nbt.putInt("ether", ether);
-
-        syncEther(ether, (ServerPlayerEntity) player);
-        return ether;
-    }
-
-    public static void  syncEther(int ether, ServerPlayerEntity player) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(ether);
-        buffer.writeInt(((IEntityDataSaver) player).getPersistentData().getInt("maxEther"));
-        ServerPlayNetworking.send(player, ModPackets.ETHER_SYNC_ID, buffer);
+    public static void tickPools(MinecraftServer server) {
+        ETHER.tickPool(server);
+        STAMINA.tickPool(server);
+        MENTAL_ENERGY.tickPool(server);
     }
 }

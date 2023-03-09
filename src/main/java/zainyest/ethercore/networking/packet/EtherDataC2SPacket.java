@@ -1,0 +1,14 @@
+package zainyest.ethercore.networking.packet;
+
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import zainyest.ethercore.util.EtherData;
+
+public class EtherDataC2SPacket {
+    public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        EtherData.c2s(server, player, handler, buf, responseSender);
+    }
+}

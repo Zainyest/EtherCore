@@ -6,9 +6,9 @@ import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.networking.packet.EtherSyncDataS2CPacket;
 
 public class ModPacketsClient {
-    public static final Identifier ETHER_SYNC_ID = new Identifier(EtherCore.MOD_ID, "ether_sync");
+    public static final Identifier POOL_SYNC_ID = new Identifier(EtherCore.MOD_ID, "pool_sync");
 
     public static void registerS2CPackets() {
-        ClientPlayNetworking.registerGlobalReceiver(ETHER_SYNC_ID, EtherSyncDataS2CPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(POOL_SYNC_ID, EtherSyncDataS2CPacket::receive);
     }
 }

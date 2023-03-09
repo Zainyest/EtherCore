@@ -17,8 +17,8 @@ import zainyest.ethercore.util.IEntityDataSaver;
 public class CastEtherBoltC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         //Only happens on the server
-        if (EtherData.getEther((IEntityDataSaver) player) > 50) {
-            player.sendMessageToClient(Text.literal("ETHER BOLT used, Ether: " + EtherData.removeEther((IEntityDataSaver) player, 50)).fillStyle(Style.EMPTY.withColor(Formatting.GOLD)), true);
+        if (EtherData.ETHER.getVal((IEntityDataSaver) player) > 50) {
+            player.sendMessageToClient(Text.literal("ETHER BOLT used, Ether: " + EtherData.ETHER.remove((IEntityDataSaver) player, 50)).fillStyle(Style.EMPTY.withColor(Formatting.GOLD)), true);
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.PLAYERS);
 
             EtherBoltEntity etherBoltEntity = new EtherBoltEntity(player.getWorld(), player);
