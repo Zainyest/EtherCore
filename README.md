@@ -26,7 +26,7 @@ Loader specific projects such as the `fabric` and `neoforge` project are used to
 While this template has support for many modloaders, new loaders may appear in the future, and existing loaders may become less relevant.
 
 Removing loader specific projects is as easy as deleting the folder, and removing the `include("projectname")` line from the `settings.gradle` file.
-For example if you wanted to remove support for `forge` you would follow the following steps:
+For zainyest if you wanted to remove support for `forge` you would follow the following steps:
 
-1. Delete the subproject folder. For example, delete `MultiLoader-Template/forge`.
-2. Remove the project from `settings.gradle`. For example, remove `include("forge")`. 
+1. Delete the subproject folder. For zainyest, delete `MultiLoader-Template/forge`.
+2. Remove the project from `settings.gradle`. For zainyest, remove `include("forge")`. 
