@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import zainyest.ethercore.event.KeyInputHandler;
-import zainyest.ethercore.hud.EtherHudOverlay;
+//import zainyest.ethercore.hud.EtherHudOverlay;
 import zainyest.ethercore.networking.ModPacketsClient;
 
 public class EtherCoreClient implements ClientModInitializer {
@@ -15,8 +15,8 @@ public class EtherCoreClient implements ClientModInitializer {
 
 		KeyInputHandler.register();
 		ModPacketsClient.registerS2CPackets();
-		EntityRendererRegistry.register(EtherCore.EtherBoltEntityType, (context) -> new FlyingItemEntityRenderer(context));
+		//EntityRendererRegistry.register(EtherCore.EtherBoltEntityType, (context) -> new FlyingItemEntityRenderer(context));
 
-		HudRenderCallback.EVENT.register(new EtherHudOverlay());
+		//HudRenderCallback.EVENT.register(new EtherHudOverlay());
 	}
 }
