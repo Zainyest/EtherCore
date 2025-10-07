@@ -7,6 +7,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import zainyest.ethercore.util.EtherData;
 
+// TODO Make this a CustomPayload and Receiver
 public class EtherDataC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         EtherData.c2s(server, player, handler, buf, responseSender);

@@ -12,7 +12,7 @@
 		"sources": "https://github.com/Zainyest/EtherCore"
 	},
 	"license": "MIT License",
-	"icon": "assets/template-mod/icon.png",
+	"icon": "assets/ethercore/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -30,10 +30,10 @@
 		}
 	],
 	"depends": {
-		"fabricloader": ">=0.14.17",
-		"minecraft": "~1.19.3",
-		"java": ">=17",
-		"fabric-api": "*",
+        "fabricloader": ">=0.17.2",
+        "minecraft": "~1.21.8",
+        "java": ">=21",
+        "fabric-api": "*",
 		"fabric-key-binding-api-v1": "*"
 	},
 	"suggests": {

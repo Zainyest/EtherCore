@@ -21,10 +21,10 @@ public class KeyInputHandler {
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (openMenuKey.wasPressed()) {
-                ClientPlayNetworking.send(ModPackets.MENU_OPEN_ID, PacketByteBufs.create()); // Menu packet sent
+                //ClientPlayNetworking.send(ModPackets.MENU_OPEN_ID, PacketByteBufs.create()); // Menu packet sent
             }
             if (castEtherBoltKey.wasPressed()) {
-                ClientPlayNetworking.send(ModPackets.CAST_ETHER_BOLT_ID, PacketByteBufs.create()); // Ether Bolt cast
+                //ClientPlayNetworking.send(ModPackets.CAST_ETHER_BOLT_ID, PacketByteBufs.create()); // Ether Bolt cast
             }
         });
     }
