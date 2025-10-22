@@ -7,12 +7,13 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import zainyest.ethercore.networking.ModPackets;
 
 public class KeyInputHandler {
-    public static final String KEY_CATEGORY_ETHERCORE = "key.category.ethercore.ethercore";
-    public static final String KEY_OPEN_MENU = "key.ethercore.open_menu";
+    public static final KeyBinding.Category KEY_CATEGORY_ETHERCORE = KeyBinding.Category.create(Identifier.of("ethercore", "ethercore"));
+    public static final String KEY_OPEN_MENU = "key.ethercore.open_menu"; // TODO recreate these strings using above as template
     public static final String KEY_CAST_ETHER_BOLT = "key.ethercore.cast_ether_bolt";
 
     public static KeyBinding openMenuKey;

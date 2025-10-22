@@ -96,7 +96,7 @@ public class EtherPool {
             }
             if (new Random().nextFloat() <= 0.005f) { // TODO replace temporary pool stat increase function with Cultivation system
                 setMax(dataPlayer, getMax(dataPlayer)+100);
-                player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_STEP, SoundCategory.PLAYERS, 4.0f, 4.0f);
+                player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_STEP, SoundCategory.PLAYERS, 4.0f, 4.0f);
             }
         }
     }
