@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.networking.packet.PlayerDataPayload;
 
 import java.util.Random;
@@ -82,7 +83,10 @@ public class EtherPool {
 
     public void tickPool(MinecraftServer server) {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-            assert player != null; //TODO MAYBE?
+            if (player == null) {
+                EtherCore.LOGGER.info("Null Player, skipping tickPool");
+                return;
+            }
             PlayerData dataPlayer = StateSaverAndLoader.getPlayerState(player);
 
             if (getRegenRate(dataPlayer) < 1) {
