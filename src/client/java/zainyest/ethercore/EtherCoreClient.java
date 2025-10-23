@@ -14,13 +14,8 @@ public class EtherCoreClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
-
 		KeyInputHandler.register();
 		ModPacketsClient.registerS2CPackets();
         HudElementRegistry.attachElementBefore(VanillaHudElements.HEALTH_BAR, Identifier.of(EtherCore.MOD_ID, "before_health"), EtherHudOverlay::render);
-
-		//EntityRendererRegistry.register(EtherCore.EtherBoltEntityType, (context) -> new FlyingItemEntityRenderer(context));
-
-		//HudRenderCallback.EVENT.register(new EtherHudOverlay());
 	}
 }

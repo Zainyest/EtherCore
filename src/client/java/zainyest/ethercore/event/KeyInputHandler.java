@@ -3,13 +3,10 @@ package zainyest.ethercore.event;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
-import zainyest.ethercore.networking.ModPackets;
 
 public class KeyInputHandler {
     public static final KeyBinding.Category KEY_CATEGORY_ETHERCORE = KeyBinding.Category.create(Identifier.of("ethercore", "ethercore"));

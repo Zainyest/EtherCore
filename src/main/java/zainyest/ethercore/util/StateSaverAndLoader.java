@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-// Created with great swaths of code from https://wiki.fabricmc.net/tutorial:persistent_states
+/// Created with great swaths of code from [fabricmc.net/tutorial:persistent_states](https://wiki.fabricmc.net/tutorial:persistent_states)
 public class StateSaverAndLoader extends PersistentState {
 
     public Map<UUID, PlayerData> players = new HashMap<>();
@@ -42,41 +42,6 @@ public class StateSaverAndLoader extends PersistentState {
     private StateSaverAndLoader(Map<UUID, NbtCompound> players) {
         setPlayers(players);
     }
-
-    // TODO Is this needed?? its in the tutorial but the lower half seems to be for a different version of the game;
-    // TODO: NOPE Literally never called, I think I implemented this with the above setPlayers and getPlayers functions and the new Codec System
-    //@Override
-//    public NbtCompound writeNbt(NbtCompound nbt) {
-//        // Write per-player data
-//        NbtCompound playersNbt = new NbtCompound();
-//        players.forEach(((uuid, playerData) -> {
-//            NbtCompound playerNbt = new NbtCompound();
-//
-//            playerNbt.put("ethercore.player_data", playerData.getPersistentData());
-//
-//            playersNbt.put(uuid.toString(), playerNbt);
-//        }));
-//        nbt.put("players", playersNbt);
-//
-//        return nbt;
-//    }
-
-//    public static StateSaverAndLoader createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-//        StateSaverAndLoader state = new StateSaverAndLoader();
-//
-//        NbtCompound playersNbt = tag.getCompound("players").orElse(null);
-//        assert playersNbt != null;
-//        playersNbt.getKeys().forEach(key -> {
-//            PlayerData playerData = new PlayerData();
-//
-//            playerData.persistentData = playersNbt.getCompound(key).orElse(null);
-//
-//            UUID uuid = UUID.fromString(key);
-//            state.players.put(uuid, playerData);
-//        });
-//
-//        return state;
-//    }
 
     public static StateSaverAndLoader createNew() {
         StateSaverAndLoader state = new StateSaverAndLoader();
@@ -110,8 +75,6 @@ public class StateSaverAndLoader extends PersistentState {
     public static PlayerData getPlayerState(LivingEntity player) {
         StateSaverAndLoader serverState = getServerState(player.getEntityWorld().getServer());
 
-        PlayerData playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
-
-        return playerState;
+        return serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
     }
 }
