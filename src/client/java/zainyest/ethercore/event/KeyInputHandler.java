@@ -12,7 +12,7 @@ import zainyest.ethercore.networking.packet.MeridianMenuPayload;
 
 public class KeyInputHandler {
     public static final KeyBinding.Category KEY_CATEGORY_ETHERCORE = KeyBinding.Category.create(Identifier.of("ethercore", "ethercore"));
-    public static final String KEY_OPEN_MENU = "key.ethercore.open_menu"; // TODO recreate these strings using above as template
+    public static final String KEY_OPEN_MENU = "key.ethercore.open_menu";
     public static final String KEY_CAST_ETHER_BOLT = "key.ethercore.cast_ether_bolt";
 
     public static KeyBinding openMenuKey;
