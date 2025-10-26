@@ -3,7 +3,9 @@ package zainyest.ethercore.gui.screen.ingame;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.entity.EntityRenderManager;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.state.EntityRenderState;
@@ -11,6 +13,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -30,22 +35,57 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        MeridianWidget head = MeridianWidget.mBuilder(Text.of("Head"), (btn) -> {
+            // happens on button click
+            client.player.sendMessage(Text.literal("BUTON head"), false);
+        }).dimensions(this.x+8, this.y+9, 49, 16).highlightRenderOffset(35, 0).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/head_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/head_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/head_meridians_highlighted.png"))).build();
+        this.addDrawableChild(head);
+
+        MeridianWidget torso = MeridianWidget.mBuilder(Text.of("Torso"), (btn) -> {
+            // happens on button click
+            client.player.sendMessage(Text.literal("BUTON torso"), false);
+        }).dimensions(this.x+8, this.y+44, 49, 16).highlightRenderOffset(35, 9).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/torso_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/torso_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/torso_meridians_highlighted.png"))).build();
+        this.addDrawableChild(torso);
+
+        MeridianWidget arm = MeridianWidget.mBuilder(Text.of("Arm"), (btn) -> {
+            // happens on button click
+            client.player.sendMessage(Text.literal("BUTON arm"), false);
+        }).dimensions(this.x+8, this.y+26, 49, 16).highlightRenderOffset(48, 0).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/arm_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/arm_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/arm_meridians_highlighted.png"))).build();
+        this.addDrawableChild(arm);
+
+        MeridianWidget leg = MeridianWidget.mBuilder(Text.of("Leg"), (btn) -> {
+            // happens on button click
+            client.player.sendMessage(Text.literal("BUTON leg"), false);
+        }).dimensions(this.x+8, this.y+61, 49, 16).highlightRenderOffset(40, 1).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians_highlighted.png"))).build();
+        this.addDrawableChild(leg);
+    }
+
+    @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {}
 
     @Override
     protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
+        // background
         context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, CATEGORIES, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, MERIDIANS_DISPLAY, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, PLAYER_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        // lerped tree port, oscillated vertically
+        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 10000.0)));
+        int lerpedColor1 = ColorHelper.lerp(lerpedAmount, 0x140059ff, 0x28347aff);
+        int lerpedColor2 = ColorHelper.lerp(lerpedAmount, 0x28347aff, 0x140059ff);
+        context.fillGradient(x+8, y+84, x+6+162, y+82+76, lerpedColor1, lerpedColor2);
+        // player rendered
         int i = this.x;
         int j = this.y;
         drawEntity(context, i + 64, j + 8, i + 113, j + 78, 30, 0.0625F, mouseX, mouseY, this.client.player);
 
-        // TODO add widgets
+        // TODO add widgets; Meridian buttons, Invest/Devest Buttons, TreeElement (subfunction for drawing tree lines)
         // TODO add end-portal-like background for tree window and player window
         // TODO add proof of concept tree display
     }
