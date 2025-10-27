@@ -21,6 +21,8 @@ public class EtherHudOverlay {
             return;
         }
 
+
+        // TODO make these three into "main" bars ("MainPool"s), delegate to "PassiveTechnique"s for access, render sub-bars below with unique renderers as "CustomPool"
         // render stamina bar top left
         float staminaPercentFilled = ((float) EtherData.STAMINA.getVal(EtherCoreClient.clientPlayerData.persistentData)) / ((float) EtherData.STAMINA.getMax(EtherCoreClient.clientPlayerData.persistentData));
         context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 4, 0, 5, (int) (182*staminaPercentFilled), 5, 182,10, 0xff7fff7f);
