@@ -11,7 +11,7 @@ public class QiGathering extends PassiveTechnique {
     }
 
     public QiGathering() {
-        super("qi_gathering", null, null, "Passive", "The first step", Identifier.of(EtherCore.MOD_ID, "assets/ethercore/icon.png"));
+        super("qi_gathering", new Technique[0], new Technique[0], "Passive", "The first step", Identifier.of(EtherCore.MOD_ID, "icon.png"));
     }
 
     @Override

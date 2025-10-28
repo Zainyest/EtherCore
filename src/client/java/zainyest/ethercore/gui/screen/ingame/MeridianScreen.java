@@ -23,6 +23,12 @@ import org.joml.Vector3f;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.screenhandler.MeridianScreenHandler;
+import zainyest.ethercore.util.EtherData;
+import zainyest.ethercore.util.Technique;
+
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
 
@@ -32,7 +38,9 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
     private static final Identifier PLAYER_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/player_viewport.png");
     private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/current_tree_viewport.png");
 
-    private int treeOffset_x = 0, treeOffset_y = 0;
+    private int treeOffset_x = 80, treeOffset_y = 37;
+
+    public List<TreeElementWidget> treeElementWidgets = new LinkedList<>();
 
     public MeridianScreen(MeridianScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -65,9 +73,9 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         }).dimensions(this.x+8, this.y+61, 49, 16).highlightRenderOffset(40, 1).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians_highlighted.png"))).build();
         this.addDrawableChild(leg);
 
-        // TODO create loop to instantiate all techniques as widgets
-        TreeElementWidget testTreeWidget = new TreeElementWidget(0, 0, 16, 16, Text.of("Test"));
-        this.addDrawableChild(testTreeWidget);
+        treeElementWidgets = new LinkedList<>();
+        Technique root = EtherData.TECHNIQUE_TREE.getRootTechnique();
+        instantiateTreeList(root);
     }
 
     @Override
@@ -94,10 +102,8 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         drawEntity(context, i + 64, j + 8, i + 113, j + 78, 30, 0.0625F, mouseX, mouseY, this.client.player);
 
         // TODO add widgets; Meridian buttons, Invest/Devest Buttons, TreeElement (subfunction for drawing tree lines)
-        // TODO add end-portal-like background for tree window and player window
-        // TODO add proof of concept tree display
 
-        drawTree(context, deltaTicks, mouseX, mouseY, 8, 84, 160, 74);
+        drawTree(context, deltaTicks, mouseX, mouseY, x+8, y+84, 159, 73);
     }
 
     /// From net.minecraft.client.gui.screen.ingame.InventoryScreen in vanilla
@@ -143,27 +149,74 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         drawer.addEntity(entityRenderState, scale, translation, rotation, overrideCameraAngle, x1, y1, x2, y2);
     }
 
-    public static void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) {
-        // TODO Complete this once TechniqueTree is completed
+    public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) {
         // Needs to be pannable, clickable, scalable; scissored by viewWidth, viewHeight, and pos_x, pos_y
         // most likely custom implementations of onClick, onDrag functions
         // use treeOffset_x and treeOffset_y for starting point
 
-        // get EtherData
-        NbtCompound technique_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty("technique_tree");
+        // get player's tree
+        NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(EtherData.TECHNIQUE_TREE.getName());
 
         // Parse tree data and render
+        context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
+        for (TreeElementWidget t : this.treeElementWidgets) {
+            if (player_tree.getCompoundOrEmpty(t.getName()).getBoolean("learned").isEmpty()) {
+                continue;
+            }
+            if (player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").isPresent()) {
+                t.setLearned(player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").orElseThrow());
+                t.visible = true;
+            }
+            if (!t.visible) {
+                continue;
+            }
+            //change pos
+            if (t == this.treeElementWidgets.getFirst()) { // First element case
+                t.setX(pos_x + this.treeOffset_x - (t.getWidth()/2));
+                t.setY(pos_y + this.treeOffset_y - (t.getHeight()/2));
+            } else {
+                // TODO reference parent's position and dynamic layout here
+            }
+            t.render(context, mouseX, mouseY, deltaTicks);
+            t.visible = false;
+        }
+        context.disableScissor();
     }
 
+    /// Recursive function, adds all nodes in tree to
+    private void instantiateTreeList(Technique current) {
+        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, current.getName(), current.getIcon());
+        elementWidget.visible = false;
+
+        this.treeElementWidgets.add(elementWidget);
+        this.addDrawableChild(elementWidget);
+        EtherCore.LOGGER.info(elementWidget.toString());
+
+        for (Technique t : current.getChildren()) {
+            instantiateTreeList(t);
+        }
+    }
+
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         // TODO implement tree.scale(), call here
-        return false;
+        this.treeOffset_x -= (int) horizontalAmount;
+        this.treeOffset_y += (int) verticalAmount;
+        return true;
     }
 
+    @Override
     public boolean mouseDragged(Click click, double offsetX, double offsetY) {
-        super.mouseDragged(click, offsetX, offsetY);
+        //super.mouseDragged(click, offsetX, offsetY);
         // TODO implement tree.move(), call here
+        int x = (width - backgroundWidth) / 2;
+        int y = (height - backgroundHeight) / 2;
+        //x+8, y+84, 159, 73
+        if (click.x() < x+8+159 && click.x() > x+8 && click.y() < y+84+73 && click.y() > y+84) {
+            this.treeOffset_x += (int) offsetX;
+            this.treeOffset_y += (int) offsetY;
+            return true;
+        }
         return false;
     }
 }

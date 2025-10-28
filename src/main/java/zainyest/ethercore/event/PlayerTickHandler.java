@@ -8,5 +8,6 @@ public class PlayerTickHandler implements ServerTickEvents.StartTick{
     @Override
     public void onStartTick(MinecraftServer server) {
         EtherData.tickPools(server);
+        EtherData.updateTrees(server);
     }
 }

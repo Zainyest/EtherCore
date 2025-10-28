@@ -24,7 +24,6 @@ public class EtherData {
         // validate change
         // apply change
         // sync change
-        // TODO create updateTree in TechniqueTree
-
+        TECHNIQUE_TREE.tickTree(server);
     }
 }
