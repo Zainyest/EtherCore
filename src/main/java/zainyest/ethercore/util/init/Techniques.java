@@ -3,8 +3,8 @@ package zainyest.ethercore.util.init;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.technique.QiGathering;
-import zainyest.ethercore.util.Technique;
+import zainyest.ethercore.technique.techniquetree.QiGathering;
+import zainyest.ethercore.technique.Technique;
 
 // TODO is this needed??
 public class Techniques {

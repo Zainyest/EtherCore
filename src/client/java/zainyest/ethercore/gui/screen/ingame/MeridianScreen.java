@@ -24,7 +24,7 @@ import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.screenhandler.MeridianScreenHandler;
 import zainyest.ethercore.util.EtherData;
-import zainyest.ethercore.util.Technique;
+import zainyest.ethercore.technique.Technique;
 
 import java.util.LinkedList;
 import java.util.List;

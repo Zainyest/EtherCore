@@ -2,7 +2,8 @@ package zainyest.ethercore.util;
 
 
 import net.minecraft.server.MinecraftServer;
-import zainyest.ethercore.technique.QiGathering;
+import zainyest.ethercore.technique.TechniqueTree;
+import zainyest.ethercore.technique.techniquetree.QiGathering;
 
 // TODO Create registry for these instances and abstract
 public class EtherData {

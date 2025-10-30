@@ -5,7 +5,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.util.Technique;
+import zainyest.ethercore.technique.Technique;
 
 
 public class Registries {

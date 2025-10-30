@@ -1,4 +1,4 @@
-package zainyest.ethercore.util;
+package zainyest.ethercore.technique;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
