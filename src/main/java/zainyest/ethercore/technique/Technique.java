@@ -86,6 +86,8 @@ public abstract class Technique {
         return techniqueData;
     }
 
+    public abstract Technique fromNbt(NbtCompound nbtCompound);
+
     /**
      * Actualize the effects of the technique.
      * For passive should be on-tick or entity modifier,

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zainyest.ethercore.event.PlayerTickHandler;
 import zainyest.ethercore.networking.ModPackets;
+import zainyest.ethercore.util.init.*;
 
 public class EtherCore implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -19,8 +20,17 @@ public class EtherCore implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Loading EtherCore...");
 
+        // register mod objects
 		ModPackets.registerC2SPackets();
-
 		ServerTickEvents.START_SERVER_TICK.register(new PlayerTickHandler());
+        initRegistries();
 	}
+
+    private void initRegistries() {
+        EtherRegistries.init();
+        Techniques.init();
+        EtherStats.init();
+        EtherPools.init();
+        TechniqueTrees.init();
+    }
 }

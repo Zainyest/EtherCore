@@ -6,11 +6,14 @@ import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.techniquetree.QiGathering;
 import zainyest.ethercore.technique.Technique;
 
-// TODO is this needed??
 public class Techniques {
     public static final QiGathering QI_GATHERING = registerTechnique("qi_gathering", new QiGathering());
 
     private static <T extends Technique> T registerTechnique(String name, T technique) {
-        return Registry.register(Registries.TECHNIQUE, Identifier.of(EtherCore.MOD_ID, name), technique);
+        return Registry.register(EtherRegistries.TECHNIQUES, Identifier.of(EtherCore.MOD_ID, name), technique);
+    }
+
+    public static void init() {
+
     }
 }

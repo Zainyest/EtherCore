@@ -24,18 +24,18 @@ public class TreeElementWidget extends ClickableWidget {
 
     @Override
     public void onClick(Click click, boolean doubled) {
-        if (!this.visible) {
-            return;
-        }
-        if (this.getX() < click.x() && this.getX()+width > click.x() && this.getY() < click.y() && this.getY()+height > click.y()) {
-            this.learned = !this.learned; // TODO replace with learnTechnique call and check
+//        if (this.getX() < click.x() && this.getX()+width > click.x() && this.getY() < click.y() && this.getY()+height > click.y()) {
+//            this.learned = !this.learned; // TODO replace with learnTechnique call and check
+//        }
+        if (this.isHovered()) {
+            this.learned = !this.learned;
         }
     }
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16, this.learned ? 0xffffffff : 0x00ffffff);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16, this.learned ? 0xffffffff : 0x7fffffff);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16);
     }
 
     @Override

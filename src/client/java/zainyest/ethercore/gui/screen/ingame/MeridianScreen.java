@@ -23,8 +23,8 @@ import org.joml.Vector3f;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.screenhandler.MeridianScreenHandler;
-import zainyest.ethercore.util.EtherData;
 import zainyest.ethercore.technique.Technique;
+import zainyest.ethercore.util.init.TechniqueTrees;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
     private static final Identifier PLAYER_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/player_viewport.png");
     private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/current_tree_viewport.png");
 
-    private int treeOffset_x = 80, treeOffset_y = 37;
+    private double treeOffset_x = 80, treeOffset_y = 37;
 
     public List<TreeElementWidget> treeElementWidgets = new LinkedList<>();
 
@@ -74,7 +74,7 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         this.addDrawableChild(leg);
 
         treeElementWidgets = new LinkedList<>();
-        Technique root = EtherData.TECHNIQUE_TREE.getRootTechnique();
+        Technique root = TechniqueTrees.TECHNIQUE_TREE.getRootTechnique();
         instantiateTreeList(root);
     }
 
@@ -155,7 +155,7 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         // use treeOffset_x and treeOffset_y for starting point
 
         // get player's tree
-        NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(EtherData.TECHNIQUE_TREE.getName());
+        NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(TechniqueTrees.TECHNIQUE_TREE.getName());
 
         // Parse tree data and render
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
@@ -172,8 +172,8 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
             }
             //change pos
             if (t == this.treeElementWidgets.getFirst()) { // First element case
-                t.setX(pos_x + this.treeOffset_x - (t.getWidth()/2));
-                t.setY(pos_y + this.treeOffset_y - (t.getHeight()/2));
+                t.setX(pos_x + (int)Math.round(this.treeOffset_x) - (t.getWidth()/2));
+                t.setY(pos_y + (int)Math.round(this.treeOffset_y) - (t.getHeight()/2));
             } else {
                 // TODO reference parent's position and dynamic layout here
             }
@@ -183,7 +183,7 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         context.disableScissor();
     }
 
-    /// Recursive function, adds all nodes in tree to
+    /// Recursive function, adds all nodes in tree to treeElementWidgets
     private void instantiateTreeList(Technique current) {
         TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, current.getName(), current.getIcon());
         elementWidget.visible = false;
@@ -211,10 +211,10 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
         // TODO implement tree.move(), call here
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
-        //x+8, y+84, 159, 73
+        //TechniqueTree window (x, y, width, height): x+8, y+84, 159, 73
         if (click.x() < x+8+159 && click.x() > x+8 && click.y() < y+84+73 && click.y() > y+84) {
-            this.treeOffset_x += (int) offsetX;
-            this.treeOffset_y += (int) offsetY;
+            this.treeOffset_x += offsetX;
+            this.treeOffset_y += offsetY;
             return true;
         }
         return false;
