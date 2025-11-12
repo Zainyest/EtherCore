@@ -24,6 +24,7 @@ import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.screenhandler.MeridianScreenHandler;
 import zainyest.ethercore.technique.Technique;
+import zainyest.ethercore.util.init.EtherRegistries;
 import zainyest.ethercore.util.init.TechniqueTrees;
 
 import java.util.LinkedList;
@@ -50,25 +51,22 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
     protected void init() {
         super.init();
         MeridianWidget head = MeridianWidget.mBuilder(Text.of("Head"), (btn) -> {
-            // happens on button click
             client.player.sendMessage(Text.literal("BUTON head"), false);
+            client.player.sendMessage(Text.literal(EtherCoreClient.clientPlayerData.persistentData.toString()), false);
         }).dimensions(this.x+8, this.y+9, 49, 16).highlightRenderOffset(35, 0).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/head_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/head_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/head_meridians_highlighted.png"))).build();
         this.addDrawableChild(head);
 
         MeridianWidget torso = MeridianWidget.mBuilder(Text.of("Torso"), (btn) -> {
-            // happens on button click
             client.player.sendMessage(Text.literal("BUTON torso"), false);
         }).dimensions(this.x+8, this.y+44, 49, 16).highlightRenderOffset(35, 9).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/torso_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/torso_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/torso_meridians_highlighted.png"))).build();
         this.addDrawableChild(torso);
 
         MeridianWidget arm = MeridianWidget.mBuilder(Text.of("Arm"), (btn) -> {
-            // happens on button click
             client.player.sendMessage(Text.literal("BUTON arm"), false);
         }).dimensions(this.x+8, this.y+26, 49, 16).highlightRenderOffset(48, 0).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/arm_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/arm_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/arm_meridians_highlighted.png"))).build();
         this.addDrawableChild(arm);
 
         MeridianWidget leg = MeridianWidget.mBuilder(Text.of("Leg"), (btn) -> {
-            // happens on button click
             client.player.sendMessage(Text.literal("BUTON leg"), false);
         }).dimensions(this.x+8, this.y+61, 49, 16).highlightRenderOffset(40, 1).texturePaths(new ButtonTextures(Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians.png"), Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/leg_meridians_highlighted.png"))).build();
         this.addDrawableChild(leg);
@@ -164,7 +162,7 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
                 continue;
             }
             if (player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").isPresent()) {
-                t.setLearned(player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").orElseThrow());
+                //t.setLearned(player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").orElseThrow());
                 t.visible = true;
             }
             if (!t.visible) {
@@ -178,7 +176,7 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
                 // TODO reference parent's position and dynamic layout here
             }
             t.render(context, mouseX, mouseY, deltaTicks);
-            t.visible = false;
+            //t.visible = false;
         }
         context.disableScissor();
     }
@@ -190,10 +188,10 @@ public class MeridianScreen extends HandledScreen<MeridianScreenHandler> {
 
         this.treeElementWidgets.add(elementWidget);
         this.addDrawableChild(elementWidget);
-        EtherCore.LOGGER.info(elementWidget.toString());
+        //this.addSelectableChild(elementWidget);
 
-        for (Technique t : current.getChildren()) {
-            instantiateTreeList(t);
+        for (Identifier id : current.getChildren()) {
+            instantiateTreeList(EtherRegistries.TECHNIQUES.get(id));
         }
     }
 

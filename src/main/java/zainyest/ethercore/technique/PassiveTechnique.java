@@ -4,7 +4,7 @@ import net.minecraft.util.Identifier;
 
 public abstract class PassiveTechnique extends Technique {
 
-    public PassiveTechnique(String name, Technique[] parents, Technique[] children, String techniqueType, String description, Identifier icon) {
+    public PassiveTechnique(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
         super(name, parents, children, techniqueType, description, icon);
     }
 

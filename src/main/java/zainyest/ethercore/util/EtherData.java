@@ -7,13 +7,13 @@ import zainyest.ethercore.util.init.EtherRegistries;
 
 public class EtherData {
     public static void tickPools(MinecraftServer server) {
-        for (EtherPool pool : EtherRegistries.ETHER_POOLS.stream().toList()) {
+        for (EtherPool pool : EtherRegistries.ETHER_POOLS) {
             pool.tickPool(server);
         }
     }
 
     public static void updateTrees(MinecraftServer server) {
-        for (TechniqueTree tree : EtherRegistries.TECHNIQUE_TREES.stream().toList()) {
+        for (TechniqueTree tree : EtherRegistries.TECHNIQUE_TREES) {
             tree.tickTree(server);
         }
     }

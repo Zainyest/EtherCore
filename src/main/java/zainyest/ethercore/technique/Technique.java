@@ -5,14 +5,14 @@ import net.minecraft.util.Identifier;
 
 public abstract class Technique {
     private String techniqueName;
-    private Technique[] parents;
-    private Technique[] children;
+    private Identifier[] parents;
+    private Identifier[] children;
     private String techniqueType; // TODO could replace this with "instanceof" keyword if types are subsidiary abstracts
     private String description;
     private Identifier icon;
     private Boolean learned = false;
 
-    public Technique(String name, Technique[] parents, Technique[] children, String techniqueType, String description, Identifier icon) {
+    public Technique(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
         this.techniqueName = name;
         this.parents = parents;
         this.children = children;
@@ -28,16 +28,16 @@ public abstract class Technique {
     public String getName() {
         return techniqueName;
     }
-    public void setParents(Technique[] parents) {
+    public void setParents(Identifier[] parents) {
         this.parents = parents;
     }
-    public Technique[] getParents() {
+    public Identifier[] getParents() {
         return this.parents;
     }
-    public void setChildren(Technique[] children) {
+    public void setChildren(Identifier[] children) {
         this.children = children;
     }
-    public Technique[] getChildren() {
+    public Identifier[] getChildren() {
         return this.children;
     }
     public void setType(String techniqueType) {
@@ -70,23 +70,12 @@ public abstract class Technique {
         NbtCompound techniqueData = new NbtCompound();
 
         techniqueData.putString("name", techniqueName);
-        // if null, this is a root
-        for (Technique p : this.parents) {
-            techniqueData.putString("parent", p.getName());
-        }
-        // if null, this is a leaf
-        for (Technique c : this.children) {
-            techniqueData.putString("child", c.getName());
-        }
-        techniqueData.putString("type", this.techniqueType);
-        techniqueData.putString("description", this.description);
-        techniqueData.putString("icon", this.icon.toString());
+
+        //keep this
         techniqueData.putBoolean("learned", this.learned);
 
         return techniqueData;
     }
-
-    public abstract Technique fromNbt(NbtCompound nbtCompound);
 
     /**
      * Actualize the effects of the technique.

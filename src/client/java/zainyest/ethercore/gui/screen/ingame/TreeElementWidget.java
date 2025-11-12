@@ -1,5 +1,6 @@
 package zainyest.ethercore.gui.screen.ingame;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
@@ -29,6 +30,29 @@ public class TreeElementWidget extends ClickableWidget {
 //        }
         if (this.isHovered()) {
             this.learned = !this.learned;
+        }
+    }
+
+//    @Override
+//    public boolean isInteractable() {
+//        return this.learned;
+//    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if (!this.isInteractable()) {
+            return false;
+        } else {
+            if (this.isValidClickButton(click.buttonInfo())) {
+                boolean bl = this.isMouseOver(click.x(), click.y());
+                if (bl) {
+                    this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+                    this.onClick(click, doubled);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

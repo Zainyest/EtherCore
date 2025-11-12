@@ -4,10 +4,12 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.networking.packet.PlayerDataPayload;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
+import zainyest.ethercore.util.init.EtherRegistries;
 
 public class TechniqueTree {
     private String treeName;
@@ -42,6 +44,13 @@ public class TechniqueTree {
         ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
     }
 
+    public void recursiveUpdateTree(ServerPlayerEntity player, PlayerData dataPlayer, Technique current) {
+        setTechnique(player, dataPlayer, current);
+        for (Identifier id : current.getChildren()) {
+            recursiveUpdateTree(player, dataPlayer, EtherRegistries.TECHNIQUES.get(id));
+        }
+    }
+
     /// TEMPORARY TEST, SHOULD ONLY UPDATE WHEN CHANGE DETECTED
     public void tickTree(MinecraftServer server) {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
@@ -51,7 +60,7 @@ public class TechniqueTree {
             }
             PlayerData dataPlayer = StateSaverAndLoader.getPlayerState(player);
 
-            setTechnique(player, dataPlayer, this.rootTechnique);
+            recursiveUpdateTree(player, dataPlayer, this.rootTechnique);
         }
     }
 }

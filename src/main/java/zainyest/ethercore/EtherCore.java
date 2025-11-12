@@ -24,6 +24,8 @@ public class EtherCore implements ModInitializer {
 		ModPackets.registerC2SPackets();
 		ServerTickEvents.START_SERVER_TICK.register(new PlayerTickHandler());
         initRegistries();
+
+        LOGGER.info("EtherCore Loaded!");
 	}
 
     private void initRegistries() {

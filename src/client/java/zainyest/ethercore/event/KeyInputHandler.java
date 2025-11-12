@@ -4,10 +4,14 @@ package zainyest.ethercore.event;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
+import zainyest.ethercore.gui.screen.ingame.TreeScreen;
 import zainyest.ethercore.networking.packet.MeridianMenuPayload;
 
 public class KeyInputHandler {
@@ -21,7 +25,9 @@ public class KeyInputHandler {
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (openMenuKey.wasPressed()) {
-                ClientPlayNetworking.send(new MeridianMenuPayload(client.player.getUuid()));
+                //ClientPlayNetworking.send(new MeridianMenuPayload(client.player.getUuid()));
+                Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+                MinecraftClient.getInstance().setScreen(new TreeScreen(Text.empty(), currentScreen));
             }
             if (castEtherBoltKey.wasPressed()) {
                 //ClientPlayNetworking.send(ModPackets.CAST_ETHER_BOLT_ID, PacketByteBufs.create()); // Ether Bolt cast

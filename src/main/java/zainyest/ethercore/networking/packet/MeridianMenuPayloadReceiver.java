@@ -10,5 +10,6 @@ public class MeridianMenuPayloadReceiver implements ServerPlayNetworking.PlayPay
     @Override
     public void receive(MeridianMenuPayload meridianMenuPayload, ServerPlayNetworking.Context context) {
         context.player().openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, player) -> new MeridianScreenHandler(syncId, playerInventory, player, ScreenHandlerContext.create(context.player().getEntityWorld(), context.player().getBlockPos())), Text.translatable("key.ethercore.meridian_screen")));
+
     }
 }
