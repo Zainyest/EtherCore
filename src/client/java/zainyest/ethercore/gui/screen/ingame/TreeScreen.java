@@ -25,9 +25,6 @@ public class TreeScreen extends Screen {
     protected int backgroundHeight = 166;
 
     private static final Identifier INVENTORY_BACKDROP = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/inventory_backdrop.png");
-    private static final Identifier CATEGORIES = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/categories.png");
-    private static final Identifier MERIDIANS_DISPLAY = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/meridians_display.png");
-    private static final Identifier PLAYER_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/player_viewport.png");
     private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
 
     private double treeOffset_x = 80, treeOffset_y = 75;

@@ -25,9 +25,6 @@ public class TreeElementWidget extends ClickableWidget {
 
     @Override
     public void onClick(Click click, boolean doubled) {
-//        if (this.getX() < click.x() && this.getX()+width > click.x() && this.getY() < click.y() && this.getY()+height > click.y()) {
-//            this.learned = !this.learned; // TODO replace with learnTechnique call and check
-//        }
         if (this.isHovered()) {
             this.learned = !this.learned;
         }
