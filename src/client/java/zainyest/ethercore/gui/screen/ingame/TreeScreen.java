@@ -79,7 +79,7 @@ public class TreeScreen extends Screen {
         // Parse tree data and render
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
         TreeElementWidget prevT = null;
-        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // TODO reimplement this with breadth-first iterator from root
+        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // TODO reimplement this with breadth-first iterator from root (and use entry<T, T>)
             if (player_tree.getCompoundOrEmpty(t.getName()).getBoolean("learned").isEmpty()) {
                 continue;
             }
@@ -115,8 +115,8 @@ public class TreeScreen extends Screen {
                 // new matrix
                 matrices.pushMatrix();
 
-                double deltaX = parentX - t.getX(); // 40 - 40 = 0
-                double deltaY = parentY - t.getY(); // 40 - 60 = -20
+                double deltaX = parentX - t.getX();
+                double deltaY = parentY - t.getY();
                 float angle = (float) Math.atan2(deltaY, deltaX);
                 matrices.rotateAbout(angle, (float) t.getX() + ((float) t.getWidth() / 2F), (float) t.getY() + ((float) t.getHeight() / 2F) + 0.5F);
                 int length = (int) Math.round(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
@@ -128,8 +128,13 @@ public class TreeScreen extends Screen {
             prevT = t;
         }
 
-        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) {
+        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // Render elements
             t.render(context, mouseX, mouseY, deltaTicks);
+        }
+        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // Render tooltips
+            if (t.isHovered()) {
+                t.renderToolTip(context, width, deltaTicks);
+            }
         }
 
         context.disableScissor();
@@ -137,7 +142,7 @@ public class TreeScreen extends Screen {
 
     /// Recursive function, adds all nodes in tree to treeElementWidgets
     private void instantiateTreeList(Technique current) {
-        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, current.getName(), current.getIcon());
+        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, current.getName(), current.getIcon(), this.client);
         elementWidget.visible = false;
 
         this.treeElementWidgets.put(current.getName(), elementWidget);
