@@ -7,9 +7,11 @@ import zainyest.ethercore.util.EtherData;
 public class PlayerTickHandler implements ServerTickEvents.StartTick{
     @Override
     public void onStartTick(MinecraftServer server) {
-        EtherData.tickPools(server);
-        EtherData.updateTrees(server);
+        //Modify PlayerData
         EtherData.updatePlayerStats(server);
+        EtherData.updateTrees(server);
+        EtherData.tickPools(server);
+        //Send packets to dirty players
         EtherData.sendPlayerDataPayloads(server);
     }
 }
