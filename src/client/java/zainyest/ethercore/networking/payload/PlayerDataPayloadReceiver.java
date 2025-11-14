@@ -1,4 +1,4 @@
-package zainyest.ethercore.networking.packet;
+package zainyest.ethercore.networking.payload;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import zainyest.ethercore.EtherCoreClient;

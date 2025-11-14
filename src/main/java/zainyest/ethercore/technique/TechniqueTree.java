@@ -6,7 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.networking.packet.PlayerDataPayload;
+import zainyest.ethercore.networking.payload.PlayerDataPayload;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.util.init.EtherRegistries;

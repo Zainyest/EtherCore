@@ -1,4 +1,4 @@
-package zainyest.ethercore.networking.packet;
+package zainyest.ethercore.networking.payload;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -10,8 +10,8 @@ import net.minecraft.util.Identifier;
 import static zainyest.ethercore.EtherCore.MOD_ID;
 
 public record PlayerDataPayload(NbtCompound persistentData) implements CustomPayload {
-    public static final Identifier ETHER_POOL_ID = Identifier.of(MOD_ID, "ether_pool");
-    public static final CustomPayload.Id<PlayerDataPayload> ID = new CustomPayload.Id<>(ETHER_POOL_ID);
+    public static final Identifier PLAYER_DATA_PAYLOAD_ID = Identifier.of(MOD_ID, "player_data_payload_id");
+    public static final CustomPayload.Id<PlayerDataPayload> ID = new CustomPayload.Id<>(PLAYER_DATA_PAYLOAD_ID);
     public static final PacketCodec<PacketByteBuf, PlayerDataPayload> CODEC = PacketCodec.tuple(
             PacketCodecs.NBT_COMPOUND,
             PlayerDataPayload::persistentData,

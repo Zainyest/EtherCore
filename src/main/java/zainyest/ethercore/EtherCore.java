@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zainyest.ethercore.event.PlayerTickHandler;
-import zainyest.ethercore.networking.ModPackets;
+import zainyest.ethercore.networking.ModPayloads;
 import zainyest.ethercore.util.init.*;
 
 public class EtherCore implements ModInitializer {
@@ -18,7 +18,8 @@ public class EtherCore implements ModInitializer {
 		LOGGER.info("Loading EtherCore...");
 
         // register mod objects
-		ModPackets.registerC2SPackets();
+		ModPayloads.registerC2SPayloads();
+        ModPayloads.registerS2CPayloads();
 		ServerTickEvents.START_SERVER_TICK.register(new PlayerTickHandler());
         initRegistries();
 

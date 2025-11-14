@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.event.KeyInputHandler;
 import zainyest.ethercore.hud.EtherHudOverlay;
-import zainyest.ethercore.networking.ModPacketsClient;
+import zainyest.ethercore.networking.ModPayloadsClient;
 import zainyest.ethercore.util.ClientPlayerData;
 
 public class EtherCoreClient implements ClientModInitializer {
@@ -14,7 +14,7 @@ public class EtherCoreClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		KeyInputHandler.register();
-		ModPacketsClient.registerS2CPackets();
+		ModPayloadsClient.registerS2CPayloadReceivers();
         HudElementRegistry.attachElementBefore(VanillaHudElements.HEALTH_BAR, Identifier.of(EtherCore.MOD_ID, "before_health"), EtherHudOverlay::render);
 	}
 }

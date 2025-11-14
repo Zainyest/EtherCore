@@ -1,4 +1,4 @@
-package zainyest.ethercore.networking.packet;
+package zainyest.ethercore.networking.payload;
 
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;

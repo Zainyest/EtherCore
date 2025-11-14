@@ -63,7 +63,7 @@ public class TreeScreen extends Screen {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         // lerped tree port, oscillated vertically
-        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 10000.0)));
+        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 5000.0)));
         int lerpedColor1 = ColorHelper.lerp(lerpedAmount, 0x140059ff, 0x28347aff);
         int lerpedColor2 = ColorHelper.lerp(lerpedAmount, 0x28347aff, 0x140059ff);
         context.fillGradient(x+8, y+8, x+8+160, y+8+150, lerpedColor1, lerpedColor2);
@@ -84,7 +84,6 @@ public class TreeScreen extends Screen {
                 continue;
             }
             if (player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").isPresent()) {
-                //t.setLearned(player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").orElseThrow());
                 t.visible = true;
             }
             if (!t.visible) {

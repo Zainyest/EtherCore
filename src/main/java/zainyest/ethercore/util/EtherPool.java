@@ -6,7 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
-import zainyest.ethercore.networking.packet.PlayerDataPayload;
+import zainyest.ethercore.networking.payload.PlayerDataPayload;
 
 public record EtherPool(String poolName, String volumeStat, String regenStat, double volumeStatConversionRate, double regenStatConversionRate) {
     public void setRegenRate(PlayerData playerData, int amount) {
@@ -81,9 +81,9 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
 
             setRegenRate(dataPlayer, (int) Math.round(PlayerEtherStats.fromPlayerData(dataPlayer).statViewList().get(regenStat).getStatTotal() * regenStatConversionRate));
 
-            add(player, dataPlayer, getRegenRate(dataPlayer));
-
             setMax(dataPlayer, (int) Math.round(PlayerEtherStats.fromPlayerData(dataPlayer).statViewList().get(volumeStat).getStatTotal() * volumeStatConversionRate));
+
+            add(player, dataPlayer, getRegenRate(dataPlayer));
         }
     }
 }
