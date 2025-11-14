@@ -1,11 +1,8 @@
 package zainyest.ethercore.technique.techniquetree;
 
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
-import zainyest.ethercore.technique.Technique;
-import zainyest.ethercore.util.init.Techniques;
 
 public class QiGathering extends PassiveTechnique {
     public QiGathering(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {

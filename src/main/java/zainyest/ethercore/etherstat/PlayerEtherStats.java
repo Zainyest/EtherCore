@@ -8,6 +8,7 @@ import zainyest.ethercore.util.init.EtherRegistries;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class PlayerEtherStats {
@@ -24,7 +25,7 @@ public class PlayerEtherStats {
     public static NbtCompound toNbt(PlayerEtherStatsView view) {
         NbtCompound out = new NbtCompound();
         for (Map.Entry<String, EtherStatView> e : view.statViewList().sequencedEntrySet()) {
-            out.put(e.getKey(), EtherRegistries.ETHER_STATS.get(Identifier.of(EtherCore.MOD_ID, e.getKey())).toNbt(e.getValue()));
+            out.put(e.getKey(), Objects.requireNonNull(EtherRegistries.ETHER_STATS.get(Identifier.of(EtherCore.MOD_ID, e.getKey()))).toNbt(e.getValue()));
         }
         return out;
     }

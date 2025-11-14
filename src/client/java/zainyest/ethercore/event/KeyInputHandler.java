@@ -15,19 +15,14 @@ import zainyest.ethercore.gui.screen.ingame.TreeScreen;
 public class KeyInputHandler {
     public static final KeyBinding.Category KEY_CATEGORY_ETHERCORE = KeyBinding.Category.create(Identifier.of("ethercore", "ethercore"));
     public static final String KEY_OPEN_MENU = "key.ethercore.open_menu";
-    public static final String KEY_CAST_ETHER_BOLT = "key.ethercore.cast_ether_bolt";
 
     public static KeyBinding openMenuKey;
-    public static KeyBinding castEtherBoltKey;
 
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (openMenuKey.wasPressed()) {
                 Screen currentScreen = MinecraftClient.getInstance().currentScreen;
                 MinecraftClient.getInstance().setScreen(new TreeScreen(Text.empty(), currentScreen));
-            }
-            if (castEtherBoltKey.wasPressed()) {
-
             }
         });
     }
@@ -37,12 +32,6 @@ public class KeyInputHandler {
                 KEY_OPEN_MENU,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_APOSTROPHE,
-                KEY_CATEGORY_ETHERCORE
-        ));
-        castEtherBoltKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                KEY_CAST_ETHER_BOLT,
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F,
                 KEY_CATEGORY_ETHERCORE
         ));
         registerKeyInputs();

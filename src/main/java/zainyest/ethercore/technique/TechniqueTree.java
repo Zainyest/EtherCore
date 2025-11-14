@@ -11,28 +11,7 @@ import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.util.init.EtherRegistries;
 
-public class TechniqueTree {
-    private String treeName;
-    private Technique rootTechnique;
-
-    public TechniqueTree(String treeName, Technique rootTechnique) {
-        this.treeName = treeName;
-        this.rootTechnique = rootTechnique;
-    }
-
-    public void setName(String name) {
-        this.treeName = name;
-    }
-    public String getName() {
-        return treeName;
-    }
-    public void setRootTechnique(Technique rootTechnique) {
-        this.rootTechnique = rootTechnique;
-    }
-    public Technique getRootTechnique() {
-        return this.rootTechnique;
-    }
-
+public record TechniqueTree(String treeName, Technique rootTechnique) {
     public void setTechnique(ServerPlayerEntity serverPlayer, PlayerData playerData, Technique technique) {
         NbtCompound treeData = playerData.persistentData.getCompoundOrEmpty(treeName);
         treeData.put(technique.getName(), technique.toNbt());

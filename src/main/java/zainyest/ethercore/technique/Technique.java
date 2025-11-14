@@ -11,7 +11,6 @@ public abstract class Technique {
     private final String techniqueType;
     private final String description;
     private final Identifier icon;
-    private final Boolean learned = false;
 
     public Technique(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
         this.techniqueName = name;
@@ -41,9 +40,6 @@ public abstract class Technique {
     public String getTechniqueType() {
         return this.techniqueType;
     }
-    public Boolean getLearned() {
-        return this.learned;
-    }
 
     public String getTranslatableName() {
         return EtherCore.MOD_ID + ".text." + this.techniqueName + ".name";
@@ -56,7 +52,8 @@ public abstract class Technique {
         techniqueData.putString("name", techniqueName);
 
         //keep this
-        techniqueData.putBoolean("learned", this.learned);
+        boolean learned = false;
+        techniqueData.putBoolean("learned", learned);
 
         return techniqueData;
     }

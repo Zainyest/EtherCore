@@ -11,7 +11,6 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.init.EtherRegistries;
@@ -24,8 +23,8 @@ public class TreeElementWidget extends ClickableWidget {
     private static final Identifier TREE_ELEMENT_HIGHLIGHTED_TEXTURE = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_element_highlighted.png");
     private static final Identifier TREE_ELEMENT_TOOLTIP_TEXTURE = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_element_tooltip.png");
     private final MinecraftClient client;
-    private Identifier icon;
-    private String name;
+    private final Identifier icon;
+    private final String name;
     private boolean learned = false;
 
     public TreeElementWidget(int x, int y, int width, int height, String name, Identifier icon, MinecraftClient client) {
@@ -42,16 +41,9 @@ public class TreeElementWidget extends ClickableWidget {
         }
     }
 
-//    @Override
-//    public boolean isInteractable() {
-//        return this.learned;
-//    }
-
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (!this.isInteractable()) {
-            return false;
-        } else {
+        if (this.isInteractable()) {
             if (this.isValidClickButton(click.buttonInfo())) {
                 boolean bl = this.isMouseOver(click.x(), click.y());
                 if (bl) {
@@ -60,9 +52,8 @@ public class TreeElementWidget extends ClickableWidget {
                     return true;
                 }
             }
-
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -72,19 +63,19 @@ public class TreeElementWidget extends ClickableWidget {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16);
     }
 
-    public void renderToolTip(DrawContext context, int screenWidth, float deltaTicks) {
+    public void renderToolTip(DrawContext context, int screenWidth) {
         List<OrderedText> title = client.textRenderer.wrapLines(
-                StringVisitable.styled(Text.translatable(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name)).getTranslatableName()).getString(), Style.EMPTY.withBold(true)),
+                StringVisitable.styled(Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name))).getTranslatableName()).getString(), Style.EMPTY.withBold(true)),
                 97);
-        List<OrderedText> description = client.textRenderer.wrapLines(StringVisitable.plain(Text.translatable(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name)).getDescription()).getString()), 97);
-        int toolTip_X = 0;
+        List<OrderedText> description = client.textRenderer.wrapLines(StringVisitable.plain(Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name))).getDescription()).getString()), 97);
+        int toolTip_X;
         if (this.getX() < screenWidth/2) {
             toolTip_X = this.width;
         } else {
             toolTip_X = -100;
         }
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TREE_ELEMENT_TOOLTIP_TEXTURE, this.getX() + toolTip_X, this.getY(), 0, 0, 100, 48, 100, 48, 0xFFFFFFFF);
-        drawText(context, title, this.getX() + toolTip_X + 4, this.getY() + 4, 0xFFFFFFFF);
+        drawText(context, title, this.getX() + toolTip_X + 4, this.getY() + 4, 0xFFD4AF37);
         drawText(context, description, this.getX() + toolTip_X + 4, this.getY() + 4 + 16, 0xFFFFFFFF);
     }
 
@@ -92,7 +83,7 @@ public class TreeElementWidget extends ClickableWidget {
         TextRenderer textRenderer = this.client.textRenderer;
 
         for(int i = 0; i < text.size(); ++i) {
-            OrderedText var10002 = (OrderedText)text.get(i);
+            OrderedText var10002 = text.get(i);
             Objects.requireNonNull(textRenderer);
             context.drawTextWithShadow(textRenderer, var10002, x, y + i * 9, color);
         }
@@ -106,15 +97,4 @@ public class TreeElementWidget extends ClickableWidget {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isLearned() {
-        return learned;
-    }
-
-    public void setLearned(boolean learned) {
-        this.learned = learned;
-    }
 }

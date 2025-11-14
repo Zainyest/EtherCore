@@ -13,6 +13,7 @@ import zainyest.ethercore.EtherCore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /// Created with great swaths of code from [fabricmc.net/tutorial:persistent_states](https://wiki.fabricmc.net/tutorial:persistent_states)
@@ -25,17 +26,13 @@ public class StateSaverAndLoader extends PersistentState {
     }
 
     private Map<UUID, NbtCompound> setPlayers(Map<UUID, NbtCompound> players) {
-        players.forEach((uuid, nbtCompound) -> {
-            this.players.put(uuid, new PlayerData(nbtCompound));
-        });
+        players.forEach((uuid, nbtCompound) -> this.players.put(uuid, new PlayerData(nbtCompound)));
         return players;
     }
 
     private Map<UUID, NbtCompound> getPlayers() {
         Map<UUID, NbtCompound> players = new HashMap<>();
-        this.players.forEach((uuid, playerData) -> {
-            players.put(uuid, playerData.persistentData);
-        });
+        this.players.forEach((uuid, playerData) -> players.put(uuid, playerData.persistentData));
         return players;
     }
 
@@ -63,7 +60,7 @@ public class StateSaverAndLoader extends PersistentState {
     );
 
     public static StateSaverAndLoader getServerState(MinecraftServer server) {
-        PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
+        PersistentStateManager persistentStateManager = Objects.requireNonNull(server.getWorld(World.OVERWORLD)).getPersistentStateManager();
 
         StateSaverAndLoader state = persistentStateManager.getOrCreate(type);
 
@@ -73,7 +70,7 @@ public class StateSaverAndLoader extends PersistentState {
     }
 
     public static PlayerData getPlayerState(LivingEntity player) {
-        StateSaverAndLoader serverState = getServerState(player.getEntityWorld().getServer());
+        StateSaverAndLoader serverState = getServerState(Objects.requireNonNull(player.getEntityWorld().getServer()));
 
         return serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
     }

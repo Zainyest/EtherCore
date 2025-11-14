@@ -24,13 +24,11 @@ public record EtherStat(String name, int base) {
         int base;
         LinkedHashMap<String, Integer> statModifiers = new LinkedHashMap<>();
         base = nbt.getInt("base").orElse(this.base);
-        nbt.getCompoundOrEmpty("modifiers").entrySet().forEach((entry) -> {
-            statModifiers.put(entry.getKey(), entry.getValue().asInt().orElse(0));
-        });
+        nbt.getCompoundOrEmpty("modifiers").entrySet().forEach((entry) -> statModifiers.put(entry.getKey(), entry.getValue().asInt().orElse(0)));
         return new EtherStatView(this.name, base, statModifiers);
     }
 
     public EtherStatView instantiateNbt() {
-        return new EtherStatView(this.name, this.base, new LinkedHashMap<String, Integer>());
+        return new EtherStatView(this.name, this.base, new LinkedHashMap<>());
     }
 }

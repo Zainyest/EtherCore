@@ -18,6 +18,7 @@ import zainyest.ethercore.util.init.EtherRegistries;
 import zainyest.ethercore.util.init.TechniqueTrees;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class TreeScreen extends Screen {
     private final Screen parent;
@@ -30,8 +31,7 @@ public class TreeScreen extends Screen {
     private double treeOffset_x = 80, treeOffset_y = 75;
     private static final int treeTierOffset = 30;
 
-    //public List<TreeElementWidget> treeElementWidgets = new LinkedList<>();
-    public LinkedHashMap<String, TreeElementWidget> treeElementWidgets = new LinkedHashMap<String, TreeElementWidget>();
+    public LinkedHashMap<String, TreeElementWidget> treeElementWidgets = new LinkedHashMap<>();
 
     public TreeScreen(Text title, Screen parent) {
         super(title);
@@ -43,8 +43,8 @@ public class TreeScreen extends Screen {
         // Create widgets here
 
         // Tree List instantiation
-        treeElementWidgets = new LinkedHashMap<String, TreeElementWidget>();
-        Technique root = TechniqueTrees.TECHNIQUE_TREE.getRootTechnique();
+        treeElementWidgets = new LinkedHashMap<>();
+        Technique root = TechniqueTrees.TECHNIQUE_TREE.rootTechnique();
         instantiateTreeList(root);
     }
 
@@ -74,7 +74,7 @@ public class TreeScreen extends Screen {
     public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) {
         // Needs to be pannable, clickable, scalable (maybe); scissored by viewWidth, viewHeight, and pos_x, pos_y
         // get player's tree
-        NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(TechniqueTrees.TECHNIQUE_TREE.getName());
+        NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(TechniqueTrees.TECHNIQUE_TREE.treeName());
 
         // Parse tree data and render
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
@@ -98,13 +98,14 @@ public class TreeScreen extends Screen {
                 t.setY(currentPos_y - (t.getHeight() / 2));
             } else {
                 // TODO reference parent's position and dynamic layout here
-                TreeElementWidget parent = this.treeElementWidgets.get(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName())).getParents()[0].getPath());
+                TreeElementWidget parent = this.treeElementWidgets.get(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getParents()[0].getPath());
                 int parentX = parent.getX();
                 int parentY = parent.getY();
                 if (parent == prevT) {
                     t.setX(parentX);
                     t.setY(parentY + treeTierOffset); // TODO Get number of siblings and subdivide a semicircle with the number of siblings and extend from their angle
                 } else {
+                    assert prevT != null;
                     t.setX(prevT.getX() + treeTierOffset);
                     t.setY(prevT.getY());
                 }
@@ -124,7 +125,6 @@ public class TreeScreen extends Screen {
 
                 matrices.popMatrix();
             }
-            //EtherCore.LOGGER.info(t.toString() + ": " + t.getX() + ", " + t.getY());
             prevT = t;
         }
 
@@ -133,7 +133,7 @@ public class TreeScreen extends Screen {
         }
         for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // Render tooltips
             if (t.isHovered()) {
-                t.renderToolTip(context, width, deltaTicks);
+                t.renderToolTip(context, width);
             }
         }
 
@@ -146,12 +146,10 @@ public class TreeScreen extends Screen {
         elementWidget.visible = false;
 
         this.treeElementWidgets.put(current.getName(), elementWidget);
-        //this.addDrawableChild(elementWidget);
         this.addSelectableChild(elementWidget);
-        EtherCore.LOGGER.info(elementWidget.toString());
 
         for (Identifier id : current.getChildren()) {
-            instantiateTreeList(EtherRegistries.TECHNIQUES.get(id));
+            instantiateTreeList(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(id)));
         }
     }
 
@@ -178,6 +176,7 @@ public class TreeScreen extends Screen {
 
     @Override
     public void close() {
+        assert this.client != null;
         this.client.setScreen(this.parent);
     }
 
