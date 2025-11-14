@@ -1,9 +1,12 @@
 package zainyest.ethercore.etherstat;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.PlayerData;
+import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.util.init.EtherRegistries;
 
 import java.util.LinkedHashMap;
@@ -44,5 +47,18 @@ public class PlayerEtherStats {
             return instantiateNbt();
         }
         return toNbt(fromPlayerData(playerData));
+    }
+
+    public static void updateStats(MinecraftServer server) {
+        for (ServerPlayerEntity serverPlayer : server.getPlayerManager().getPlayerList()) {
+            if (serverPlayer == null) {
+                //EtherCore.LOGGER.info("Null Player, skipping tickPool");
+                EtherCore.LOGGER.atError().log("Null Player, skipping tickPool");
+                return;
+            }
+            PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
+            playerData.persistentData.put(PlayerEtherStats.PLAYER_ETHER_STATS_KEY, PlayerEtherStats.getOrCreateNbt(playerData));
+            playerData.markDirty();
+        }
     }
 }

@@ -1,12 +1,10 @@
 package zainyest.ethercore.technique;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.networking.payload.PlayerDataPayload;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.util.init.EtherRegistries;
@@ -20,7 +18,8 @@ public record TechniqueTree(String treeName, Technique rootTechnique) {
     }
 
     public void syncTree(ServerPlayerEntity player) {
-        ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
+        //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
+        StateSaverAndLoader.getPlayerState(player).markDirty();
     }
 
     public void recursiveUpdateTree(ServerPlayerEntity player, PlayerData dataPlayer, Technique current) {

@@ -22,10 +22,10 @@ import java.util.Objects;
 
 public class TreeScreen extends Screen {
     private final Screen parent;
-    protected int backgroundWidth = 176;
-    protected int backgroundHeight = 166;
+    protected int backgroundWidth = 256;
+    protected int backgroundHeight = 256;
 
-    private static final Identifier INVENTORY_BACKDROP = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/inventory_backdrop.png");
+    private static final Identifier TREE_SCREEN_BACKDROP = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
     private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
 
     private double treeOffset_x = 80, treeOffset_y = 75;
@@ -40,6 +40,8 @@ public class TreeScreen extends Screen {
 
     @Override
     protected void init() { // TODO: create a tab renderer for navigating to a StatScreen, a TechniqueManagerScreen, and a ProgressionStageScreen
+        treeOffset_x = (double) (backgroundWidth - 16) / 2;
+        treeOffset_y = (double) (backgroundHeight - 16) / 2;
         // Create widgets here
 
         // Tree List instantiation
@@ -60,15 +62,15 @@ public class TreeScreen extends Screen {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         // background
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, TREE_SCREEN_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         // lerped tree port, oscillated vertically
-        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 5000.0)));
+        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 1000.0)));
         int lerpedColor1 = ColorHelper.lerp(lerpedAmount, 0x140059ff, 0x28347aff);
         int lerpedColor2 = ColorHelper.lerp(lerpedAmount, 0x28347aff, 0x140059ff);
-        context.fillGradient(x+8, y+8, x+8+160, y+8+150, lerpedColor1, lerpedColor2);
+        context.fillGradient(x+8, y+8, x+8+241, y+8+241, lerpedColor1, lerpedColor2);
 
-        drawTree(context, deltaTicks, mouseX, mouseY, x+8, y+8, 160, 150);
+        drawTree(context, deltaTicks, mouseX, mouseY, x+8, y+8, 240, 240);
     }
 
     public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) { // TODO: add [Apply] button to send technique learn updates
@@ -165,7 +167,7 @@ public class TreeScreen extends Screen {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         //TechniqueTree window (x, y, width, height): x+8, y+8, 160, 150
-        if (click.x() < x+8+160 && click.x() > x+8 && click.y() < y+8+150 && click.y() > y+8) {
+        if (click.x() < x+8+241 && click.x() > x+8 && click.y() < y+8+241 && click.y() > y+8) {
             this.treeOffset_x += offsetX;
             this.treeOffset_y += offsetY;
             return true;

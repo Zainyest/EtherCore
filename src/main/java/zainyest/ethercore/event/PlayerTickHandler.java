@@ -10,5 +10,6 @@ public class PlayerTickHandler implements ServerTickEvents.StartTick{
         EtherData.tickPools(server);
         EtherData.updateTrees(server);
         EtherData.updatePlayerStats(server);
+        EtherData.sendPlayerDataPayloads(server);
     }
 }

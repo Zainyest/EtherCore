@@ -1,12 +1,10 @@
 package zainyest.ethercore.util;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
-import zainyest.ethercore.networking.payload.PlayerDataPayload;
 
 public record EtherPool(String poolName, String volumeStat, String regenStat, double volumeStatConversionRate, double regenStatConversionRate) {
     public void setRegenRate(PlayerData playerData, int amount) {
@@ -68,7 +66,8 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
     }
 
     public void syncPool(ServerPlayerEntity player) {
-        ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
+        //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
+        StateSaverAndLoader.getPlayerState(player).markDirty();
     }
 
     public void tickPool(MinecraftServer server) {
