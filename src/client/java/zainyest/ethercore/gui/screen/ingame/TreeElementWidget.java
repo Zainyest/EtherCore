@@ -9,7 +9,9 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.init.EtherRegistries;
@@ -71,8 +73,10 @@ public class TreeElementWidget extends ClickableWidget {
     }
 
     public void renderToolTip(DrawContext context, int screenWidth, float deltaTicks) {
-        List<OrderedText> title = client.textRenderer.wrapLines(StringVisitable.plain(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name)).getName()), 163);
-        List<OrderedText> description = client.textRenderer.wrapLines(StringVisitable.plain(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name)).getDescription()), 163);
+        List<OrderedText> title = client.textRenderer.wrapLines(
+                StringVisitable.styled(Text.translatable(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name)).getTranslatableName()).getString(), Style.EMPTY.withBold(true)),
+                97);
+        List<OrderedText> description = client.textRenderer.wrapLines(StringVisitable.plain(Text.translatable(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name)).getDescription()).getString()), 97);
         int toolTip_X = 0;
         if (this.getX() < screenWidth/2) {
             toolTip_X = this.width;

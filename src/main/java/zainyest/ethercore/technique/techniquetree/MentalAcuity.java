@@ -14,7 +14,7 @@ public class MentalAcuity extends PassiveTechnique {
     }
 
     public MentalAcuity() {
-        super("mental_acuity", new Identifier[]{Identifier.of(EtherCore.MOD_ID, "qi_gathering")}, new Identifier[0], "passive", "brain good", Identifier.of(EtherCore.MOD_ID, "icon.png"));
+        super("mental_acuity", new Identifier[]{Identifier.of(EtherCore.MOD_ID, "qi_gathering")}, new Identifier[0], "passive", "ethercore.text.mental_acuity.description", Identifier.of(EtherCore.MOD_ID, "icon.png"));
     }
 
     @Override

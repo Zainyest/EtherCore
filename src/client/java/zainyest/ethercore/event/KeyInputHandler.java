@@ -23,12 +23,11 @@ public class KeyInputHandler {
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (openMenuKey.wasPressed()) {
-                //ClientPlayNetworking.send(new MeridianMenuPayload(client.player.getUuid()));
                 Screen currentScreen = MinecraftClient.getInstance().currentScreen;
                 MinecraftClient.getInstance().setScreen(new TreeScreen(Text.empty(), currentScreen));
             }
             if (castEtherBoltKey.wasPressed()) {
-                //ClientPlayNetworking.send(ModPackets.CAST_ETHER_BOLT_ID, PacketByteBufs.create()); // Ether Bolt cast
+
             }
         });
     }

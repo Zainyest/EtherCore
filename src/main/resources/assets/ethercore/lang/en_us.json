@@ -2,5 +2,11 @@
   "key.category.ethercore.ethercore": "EtherCore Keys",
   "key.ethercore.open_menu": "Open Menu Key",
   "key.ethercore.cast_ether_bolt": "Cast Ether Bolt",
-  "key.ethercore.meridian_screen": "Meridian Screen"
+  "key.ethercore.meridian_screen": "Meridian Screen",
+  "ethercore.text.qi_gathering.name": "Qi Gathering",
+  "ethercore.text.qi_gathering.description": "The first step on the path of infinity.",
+  "ethercore.text.body_fortification.name": "Body Fortification",
+  "ethercore.text.body_fortification.description": "Reinforce the vessel and grow strong.",
+  "ethercore.text.mental_acuity.name": "Mental Acuity",
+  "ethercore.text.mental_acuity.description": "With the mind as sharp as any sword, the world will bend to your vision."
 }

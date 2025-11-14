@@ -2,15 +2,16 @@ package zainyest.ethercore.technique;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import zainyest.ethercore.EtherCore;
 
 public abstract class Technique {
-    private String techniqueName;
-    private Identifier[] parents;
-    private Identifier[] children;
-    private String techniqueType; // TODO could replace this with "instanceof" keyword if types are subsidiary abstracts
-    private String description;
-    private Identifier icon;
-    private Boolean learned = false;
+    private final String techniqueName;
+    private final Identifier[] parents;
+    private final Identifier[] children;
+    private final String techniqueType;
+    private final String description;
+    private final Identifier icon;
+    private final Boolean learned = false;
 
     public Technique(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
         this.techniqueName = name;
@@ -22,47 +23,30 @@ public abstract class Technique {
     }
 
     // Getters and Setters
-    public void setName(String name) {
-        this.techniqueName = name;
-    }
     public String getName() {
         return techniqueName;
-    }
-    public void setParents(Identifier[] parents) {
-        this.parents = parents;
     }
     public Identifier[] getParents() {
         return this.parents;
     }
-    public void setChildren(Identifier[] children) {
-        this.children = children;
-    }
     public Identifier[] getChildren() {
         return this.children;
-    }
-    public void setType(String techniqueType) {
-        this.techniqueType = techniqueType;
-    }
-    public String getType() {
-        return this.techniqueType;
     }
     public String getDescription() {
         return description;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
     public Identifier getIcon() {
         return icon;
     }
-    public void setIcon(Identifier icon) {
-        this.icon = icon;
+    public String getTechniqueType() {
+        return this.techniqueType;
     }
     public Boolean getLearned() {
         return this.learned;
     }
-    public void setLearned(Boolean learned) {
-        this.learned = learned;
+
+    public String getTranslatableName() {
+        return EtherCore.MOD_ID + ".text." + this.techniqueName + ".name";
     }
 
     /// Returns the Technique as NbtCompound for networking and displaying

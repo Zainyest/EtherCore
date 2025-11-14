@@ -9,5 +9,6 @@ public class PlayerTickHandler implements ServerTickEvents.StartTick{
     public void onStartTick(MinecraftServer server) {
         EtherData.tickPools(server); // TODO create a registry for tick events, and loop through them here
         EtherData.updateTrees(server);
+        EtherData.updatePlayerStats(server);
     }
 }

@@ -10,9 +10,6 @@ import zainyest.ethercore.networking.ModPackets;
 import zainyest.ethercore.util.init.*;
 
 public class EtherCore implements ModInitializer {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final String MOD_ID = "ethercore";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -30,8 +27,8 @@ public class EtherCore implements ModInitializer {
 
     private void initRegistries() {
         EtherRegistries.init();
-        Techniques.init();
         EtherStats.init();
+        Techniques.init();
         EtherPools.init();
         TechniqueTrees.init();
     }
