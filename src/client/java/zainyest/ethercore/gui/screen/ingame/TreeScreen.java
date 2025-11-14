@@ -39,7 +39,7 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void init() { // TODO: create a tab renderer for navigating to a StatScreen, a TechniqueManagerScreen, and a ProgressionStageScreen
         // Create widgets here
 
         // Tree List instantiation
@@ -56,7 +56,7 @@ public class TreeScreen extends Screen {
         drawBackground(context, delta, mouseX, mouseY);
     }
 
-    protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) {
+    protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) { // TODO: create a "fullscreen" [<->] / [>-<] button
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         // background
@@ -71,7 +71,7 @@ public class TreeScreen extends Screen {
         drawTree(context, deltaTicks, mouseX, mouseY, x+8, y+8, 160, 150);
     }
 
-    public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) {
+    public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) { // TODO: add [Apply] button to send technique learn updates
         // Needs to be pannable, clickable, scalable (maybe); scissored by viewWidth, viewHeight, and pos_x, pos_y
         // get player's tree
         NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(TechniqueTrees.TECHNIQUE_TREE.treeName());
