@@ -14,8 +14,8 @@ import org.joml.Matrix3x2fStack;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.technique.Technique;
-import zainyest.ethercore.util.init.EtherRegistries;
-import zainyest.ethercore.util.init.TechniqueTrees;
+import zainyest.ethercore.init.EtherRegistries;
+import zainyest.ethercore.init.TechniqueTrees;
 
 import java.util.LinkedHashMap;
 import java.util.Objects;

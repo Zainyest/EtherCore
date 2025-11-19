@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
-import zainyest.ethercore.util.init.EtherRegistries;
+import zainyest.ethercore.init.EtherRegistries;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

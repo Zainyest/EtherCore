@@ -1,4 +1,4 @@
-package zainyest.ethercore.util.init;
+package zainyest.ethercore.init;
 
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;

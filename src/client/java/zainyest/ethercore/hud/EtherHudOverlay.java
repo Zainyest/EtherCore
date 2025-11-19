@@ -10,8 +10,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
-import zainyest.ethercore.util.EtherPoolView;
-import zainyest.ethercore.util.init.EtherPools;
+import zainyest.ethercore.etherpool.EtherPoolView;
+import zainyest.ethercore.init.EtherPools;
 
 public class EtherHudOverlay {
     private static final Identifier ETHER_TEXTURE = Identifier.of(EtherCore.MOD_ID, "textures/ether/pool_bar_blue.png");

@@ -1,10 +1,12 @@
-package zainyest.ethercore.util;
+package zainyest.ethercore.etherpool;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
+import zainyest.ethercore.util.PlayerData;
+import zainyest.ethercore.util.StateSaverAndLoader;
 
 public record EtherPool(String poolName, String volumeStat, String regenStat, double volumeStatConversionRate, double regenStatConversionRate) {
     public void setRegenRate(PlayerData playerData, int amount) {

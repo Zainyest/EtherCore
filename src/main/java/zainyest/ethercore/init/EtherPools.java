@@ -1,9 +1,9 @@
-package zainyest.ethercore.util.init;
+package zainyest.ethercore.init;
 
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.util.EtherPool;
+import zainyest.ethercore.etherpool.EtherPool;
 
 public class EtherPools {
     public static EtherPool ETHER = registerPool("ether", new EtherPool("ether", EtherStats.EMINENCE.name(), EtherStats.INFLUENCE.name(), 10.0D, 0.1D));

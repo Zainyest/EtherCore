@@ -13,7 +13,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.util.init.EtherRegistries;
+import zainyest.ethercore.init.EtherRegistries;
 
 import java.util.List;
 import java.util.Objects;

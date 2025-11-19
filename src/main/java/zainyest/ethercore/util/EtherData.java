@@ -5,10 +5,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import zainyest.ethercore.etherpool.EtherPool;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
 import zainyest.ethercore.networking.payload.PlayerDataPayload;
 import zainyest.ethercore.technique.TechniqueTree;
-import zainyest.ethercore.util.init.EtherRegistries;
+import zainyest.ethercore.init.EtherRegistries;
 
 public class EtherData {
     public static void tickPools(MinecraftServer server) {

@@ -1,4 +1,4 @@
-package zainyest.ethercore.util.init;
+package zainyest.ethercore.init;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.RegistryKey;
@@ -8,7 +8,7 @@ import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.EtherStat;
 import zainyest.ethercore.technique.Technique;
 import zainyest.ethercore.technique.TechniqueTree;
-import zainyest.ethercore.util.EtherPool;
+import zainyest.ethercore.etherpool.EtherPool;
 
 
 public class EtherRegistries {

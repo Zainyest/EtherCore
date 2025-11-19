@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zainyest.ethercore.event.PlayerTickHandler;
+import zainyest.ethercore.init.*;
 import zainyest.ethercore.networking.ModPayloads;
-import zainyest.ethercore.util.init.*;
 
 public class EtherCore implements ModInitializer {
 	public static final String MOD_ID = "ethercore";
