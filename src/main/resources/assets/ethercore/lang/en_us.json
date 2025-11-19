@@ -8,5 +8,7 @@
   "ethercore.text.body_fortification.name": "Body Fortification",
   "ethercore.text.body_fortification.description": "Reinforce the vessel and grow strong.",
   "ethercore.text.mental_acuity.name": "Mental Acuity",
-  "ethercore.text.mental_acuity.description": "With the mind as sharp as any sword, the world will bend to your vision."
+  "ethercore.text.mental_acuity.description": "With the mind as sharp as any sword, the world will bend to your vision.",
+  "ethercore.text.time_stop.name": "Time Stop",
+  "ethercore.text.time_stop.description": "Tier 9 magic, stops time from the players perspective. \n\nOther players can see what they do from their perspective if they have Hyper-Cognition, Reactive Temporal Vision, Greater Haste, and/or Time Stop with reactive casting and \"time stop\" as the trigger."
 }

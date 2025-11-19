@@ -58,7 +58,7 @@ public class PlayerEtherStats {
             }
             PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
             playerData.persistentData.put(PlayerEtherStats.PLAYER_ETHER_STATS_KEY, PlayerEtherStats.getOrCreateNbt(playerData));
-            playerData.markDirty();
+            playerData.markDirty(PLAYER_ETHER_STATS_KEY);
         }
     }
 }

@@ -19,7 +19,7 @@ public record TechniqueTree(String treeName, Technique rootTechnique) {
 
     public void syncTree(ServerPlayerEntity player) {
         //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
-        StateSaverAndLoader.getPlayerState(player).markDirty();
+        StateSaverAndLoader.getPlayerState(player).markDirty(treeName);
     }
 
     public void recursiveUpdateTree(ServerPlayerEntity player, PlayerData dataPlayer, Technique current) {

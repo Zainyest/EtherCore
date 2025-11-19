@@ -2,6 +2,7 @@ package zainyest.ethercore.util;
 
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
@@ -30,8 +31,17 @@ public class EtherData {
         for (ServerPlayerEntity serverPlayer : server.getPlayerManager().getPlayerList()) {
             PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
             if (playerData.isDirty()) {
+                NbtCompound nbtOut = new NbtCompound();
+
+                for (String key : playerData.getDirtyElements()) {
+                    nbtOut.put(key, playerData.getPersistentData().get(key));
+                }
+
+                if (!nbtOut.isEmpty()) {
+                    ServerPlayNetworking.send(serverPlayer, new PlayerDataPayload(nbtOut));
+                }
+
                 playerData.unMarkDirty();
-                ServerPlayNetworking.send(serverPlayer, new PlayerDataPayload(playerData.getPersistentData()));
             }
         }
     }
