@@ -20,7 +20,10 @@
 		],
 		"client": [
 			"zainyest.ethercore.EtherCoreClient"
-		]
+		],
+        "fabric-datagen": [
+          "zainyest.ethercore.datagen.EtherCoreDataGenerator"
+        ]
 	},
 	"mixins": [
 		"ethercore.mixins.json",
