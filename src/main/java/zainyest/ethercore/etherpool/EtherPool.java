@@ -5,52 +5,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
+import zainyest.ethercore.etherstat.PlayerEtherStatsView;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
 
 public record EtherPool(String poolName, String volumeStat, String regenStat, double volumeStatConversionRate, double regenStatConversionRate) {
-    public void setRegenRate(PlayerData playerData, int amount) {
-        NbtCompound nbt = playerData.getPersistentData();
-        nbt.putInt(poolName + "_regen_rate", amount);
-    }
-
-    public int getRegenRate(PlayerData playerData) {
-        NbtCompound nbt = playerData.getPersistentData();
-        return nbt.getInt(poolName + "_regen_rate").orElse(0);
-    }
-
-    public void setMax(PlayerData playerData, int amount) {
-        NbtCompound nbt = playerData.getPersistentData();
-        nbt.putInt(poolName + "_max", amount);
-    }
-
-    public int getMax(PlayerData playerData) {
-        NbtCompound nbt = playerData.getPersistentData();
-        return nbt.getInt(poolName + "_max").orElse(0);
-    }
-
-    public int getMax(NbtCompound nbt) {
-        return nbt.getInt(poolName + "_max").orElse(0);
-    }
-
-    public int getVal(NbtCompound nbt) {
-        return nbt.getInt(poolName).orElse(0);
-    }
-
-    public int add(ServerPlayerEntity serverPlayer, PlayerData playerData, int amount) {
-        NbtCompound nbt = playerData.getPersistentData();
-        int poolVal = nbt.getInt(poolName).orElse(0);
-        if (poolVal + amount >= nbt.getInt(poolName + "_max").orElse(0)) {
-            poolVal = nbt.getInt(poolName + "_max").orElse(0);
-        } else {
-            poolVal += amount;
-        }
-
-        nbt.putInt(poolName, poolVal);
-
-        syncPool(serverPlayer);
-        return poolVal;
-    }
 
     public int add(int regenRate, int max, int val) {
         int poolVal = val;
@@ -63,23 +22,19 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
         return poolVal;
     }
 
-    public int remove(ServerPlayerEntity serverPlayer, PlayerData playerData, int amount) {
-        NbtCompound nbt = playerData.getPersistentData();
-        int poolVal = nbt.getInt(poolName).orElse(0);
-        if (poolVal - amount < 0) {
+    public int remove(int cost, int val) {
+        int poolVal = val;
+        if (poolVal - cost < 0) {
             poolVal = 0;
         } else {
-            poolVal -= amount;
+            poolVal -= cost;
         }
 
-        nbt.putInt(poolName, poolVal);
-
-        syncPool(serverPlayer);
         return poolVal;
     }
 
     public NbtCompound instantiateNbt() {
-        return toNbt(new EtherPoolView(this.poolName, 0, 0, 0));
+        return toNbt(instantiateView());
     }
     public EtherPoolView instantiateView() {
         return  new EtherPoolView(this.poolName, 0, 0, 0);
@@ -139,8 +94,10 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
 
             EtherPoolView pre = getOrCreateView(dataPlayer);
 
-            int regenRate = (int) Math.round(PlayerEtherStats.fromPlayerData(dataPlayer).statViewList().get(regenStat).getStatTotal() * regenStatConversionRate);
-            int max = (int) Math.round(PlayerEtherStats.fromPlayerData(dataPlayer).statViewList().get(volumeStat).getStatTotal() * volumeStatConversionRate);
+            PlayerEtherStatsView playerEtherStatsView = PlayerEtherStats.fromPlayerData(dataPlayer);
+
+            int regenRate = (int) Math.round(playerEtherStatsView.statViewList().get(regenStat).getStatTotal() * regenStatConversionRate);
+            int max = (int) Math.round(playerEtherStatsView.statViewList().get(volumeStat).getStatTotal() * volumeStatConversionRate);
 
             EtherPoolView cur = new EtherPoolView(this.poolName(),
                     regenRate,
