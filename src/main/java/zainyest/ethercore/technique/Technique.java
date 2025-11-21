@@ -1,6 +1,8 @@
 package zainyest.ethercore.technique;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 
@@ -63,5 +65,5 @@ public abstract class Technique {
      * For passive should be on-tick or entity modifier,
      * for active should use a cost and manifest an effect in the world.
      */
-    public abstract void manifest();
+    public abstract void tick(MinecraftServer server, ServerPlayerEntity serverPlayer);
 }

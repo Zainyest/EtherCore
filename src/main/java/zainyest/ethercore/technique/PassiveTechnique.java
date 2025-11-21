@@ -1,5 +1,7 @@
 package zainyest.ethercore.technique;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public abstract class PassiveTechnique extends Technique {
@@ -8,11 +10,6 @@ public abstract class PassiveTechnique extends Technique {
         super(name, parents, children, techniqueType, description, icon);
     }
 
-    @Override
-    public void manifest() {
-
-    }
-
     /// From registry will be called by PlayerTickHandler
-    public abstract void tick();
+    public abstract void tick(MinecraftServer server, ServerPlayerEntity serverPlayer);
 }

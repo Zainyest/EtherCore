@@ -1,6 +1,7 @@
 package zainyest.ethercore.technique;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public abstract class ActivatedTechnique extends Technique{
@@ -8,10 +9,10 @@ public abstract class ActivatedTechnique extends Technique{
         super(name, parents, children, techniqueType, description, icon);
     }
 
+    public abstract void manifest(MinecraftServer server, ServerPlayerEntity serverPlayer);
+
+    /// Should only be called if this.isActive() == true
     @Override
-    public void manifest() {
+    public abstract void tick(MinecraftServer server, ServerPlayerEntity serverPlayer);
 
-    }
-
-    public abstract void manifest(MinecraftServer server);
 }
