@@ -32,7 +32,7 @@ public class TimeStop extends ActivatedTechnique {
         // /particle ethercore:time_stop_particle ~ ~1 ~ 5 5 5 10 100 normal @s
     }
 
-    /// Should only be called if this.isActive() == true
+    /// Should only be called if this.isActive(serverPlayer) == true
     @Override
     public void tick(MinecraftServer server, ServerPlayerEntity serverPlayer) {
 

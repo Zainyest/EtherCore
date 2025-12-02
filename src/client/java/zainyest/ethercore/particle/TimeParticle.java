@@ -10,7 +10,6 @@ import net.minecraft.util.math.random.Random;
 
 public class TimeParticle extends BillboardParticle {
     private final SpriteProvider spriteProvider;
-    private int spriteIndex = 0;
 
     protected TimeParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.getFirst());
