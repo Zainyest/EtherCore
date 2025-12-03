@@ -1,11 +1,19 @@
 package zainyest.ethercore.etherstat;
 
 import net.minecraft.nbt.NbtCompound;
+import zainyest.ethercore.EtherCore;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public record EtherStat(String name, int base) {
+
+    public String getTranslatableName() {
+        return EtherCore.MOD_ID + ".text." + this.name() + ".name";
+    }
+    public String getTranslatableDescription() {
+        return EtherCore.MOD_ID + ".text." + this.name() + ".description";
+    }
 
     public NbtCompound toNbt(EtherStatView view) {
         NbtCompound out = new NbtCompound();

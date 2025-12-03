@@ -1,8 +1,10 @@
 package zainyest.ethercore.gui.screen.ingame;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
@@ -33,6 +35,11 @@ public class TreeScreen extends Screen {
 
     public LinkedHashMap<String, TreeElementWidget> treeElementWidgets = new LinkedHashMap<>();
 
+    public TreeScreen() {
+        super(Text.empty());
+        this.parent = null;
+    }
+
     public TreeScreen(Text title, Screen parent) {
         super(title);
         this.parent = parent;
@@ -42,7 +49,19 @@ public class TreeScreen extends Screen {
     protected void init() { // TODO: create a tab renderer for navigating to a StatScreen, a TechniqueManagerScreen, and a ProgressionStageScreen
         treeOffset_x = (double) (backgroundWidth - 16) / 2;
         treeOffset_y = (double) (backgroundHeight - 16) / 2;
+
         // Create widgets here
+        int x = (width - backgroundWidth) / 2;
+        int y = (height - backgroundHeight) / 2;
+
+        TabWidget treeScreenTabWidget = new TabWidget(x - 17, y + 22, true, (btn) -> {});
+        this.addDrawableChild(treeScreenTabWidget);
+
+        TabWidget statsScreenTabWidget = new TabWidget(x - 17, y + 22*2, false, (btn) -> MinecraftClient.getInstance().setScreen(new StatsScreen()));
+        this.addDrawableChild(statsScreenTabWidget);
+
+        TabWidget techniqueManagerScreenTabWidget = new TabWidget(x - 17, y + 22*3, false, (btn) -> MinecraftClient.getInstance().setScreen(new TreeScreen()));
+        this.addDrawableChild(techniqueManagerScreenTabWidget);
 
         // Tree List instantiation
         treeElementWidgets = new LinkedHashMap<>();
@@ -71,6 +90,14 @@ public class TreeScreen extends Screen {
         context.fillGradient(x+8, y+8, x+8+241, y+8+241, lerpedColor1, lerpedColor2);
 
         drawTree(context, deltaTicks, mouseX, mouseY, x+8, y+8, 240, 240);
+
+        for (Element e : this.children()) { // render active tab over background
+            if (e instanceof TabWidget) {
+                if (((TabWidget) e).isCurrent()) {
+                    ((TabWidget) e).renderWidget(context, mouseX, mouseY, deltaTicks);
+                }
+            }
+        }
     }
 
     public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) { // TODO: add [Apply] button to send technique learn updates
