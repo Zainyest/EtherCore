@@ -183,7 +183,6 @@ public class TreeScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        // TODO implement tree.scale(), call here
         this.treeOffset_x -= (int) horizontalAmount;
         this.treeOffset_y += (int) verticalAmount;
         return true;

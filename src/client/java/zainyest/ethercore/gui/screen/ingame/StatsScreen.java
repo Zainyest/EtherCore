@@ -7,10 +7,7 @@ import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
@@ -34,6 +31,7 @@ public class StatsScreen extends Screen {
 
     //private double offset_x = 80;
     private double offset_y = 0;
+    private int contentHeight = 240;
 
     public StatsScreen() {
         super(Text.empty());
@@ -101,32 +99,37 @@ public class StatsScreen extends Screen {
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
         int statOffset = 0;
         for (EtherStatView v : PlayerEtherStats.fromPlayerData(EtherCoreClient.clientPlayerData).statViewList().sequencedValues()) {
-            statOffset += renderStatsText(context, pos_x, currentPos_y + statOffset, viewWidth, v);
+            statOffset += renderStatsText(context, mouseX, mouseY, pos_x, currentPos_y + statOffset, viewWidth, v);
         }
-
+        contentHeight = statOffset - viewHeight;
         context.disableScissor();
     }
 
-    public int renderStatsText(DrawContext context, int x, int y, int viewWidth, EtherStatView statView) {
+    public int renderStatsText(DrawContext context, int mouseX, int mouseY, int x, int y, int viewWidth, EtherStatView statView) {
         StringVisitable titleVisitable = StringVisitable.styled(Text.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.get(Identifier.of(EtherCore.MOD_ID, statView.name()))).getTranslatableName()).getString(), Style.EMPTY.withBold(true));
         StringVisitable descriptionVisitable = StringVisitable.plain(Text.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.get(Identifier.of(EtherCore.MOD_ID, statView.name()))).getTranslatableDescription()).getString());
         StringVisitable statCompoundVisitable = StringVisitable.plain(statView.base() + " + " + (statView.getStatTotal() - statView.base()));
+        StringVisitable statModifiersVisitable = StringVisitable.plain(statView.statModifiersTranslated());
         assert client != null;
         List<OrderedText> title = client.textRenderer.wrapLines(titleVisitable, viewWidth);
         List<OrderedText> description = client.textRenderer.wrapLines(descriptionVisitable, viewWidth - 6);
         List<OrderedText> statCompound = client.textRenderer.wrapLines(statCompoundVisitable, viewWidth);
+        List<OrderedText> statModifiers = client.textRenderer.wrapLines(statModifiersVisitable, viewWidth);
         int titleHeight = client.textRenderer.getWrappedLinesHeight(titleVisitable, viewWidth);
         int descriptionHeight = client.textRenderer.getWrappedLinesHeight(descriptionVisitable, viewWidth);
         int statCompoundHeight = client.textRenderer.getWrappedLinesHeight(statCompoundVisitable, viewWidth);
+        int statModifiersHeight = client.textRenderer.getWrappedLinesHeight(statModifiersVisitable, viewWidth);
 
         int backgroundHeight = 15
                 + titleHeight
                 + descriptionHeight
-                + statCompoundHeight;
+                + statCompoundHeight
+                + statModifiersHeight;
 
         drawText(context, title, x + 6, y + 6, 0xFF0059FF);
         drawText(context, description, x + 6, y + 6 + titleHeight + 3, 0xFFFFFFFF);
         drawText(context, statCompound, x + 6, y + 6 + titleHeight + descriptionHeight + 3, 0xFFFFFFFF);
+        drawText(context, statModifiers, x + 6, y + 6 + titleHeight + descriptionHeight + statCompoundHeight + 3, 0xFFFFFFFF);
 
         return backgroundHeight;
     }
@@ -144,9 +147,8 @@ public class StatsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        //this.offset_x -= (int) horizontalAmount;
         this.offset_y += (int) verticalAmount * 4;
-        this.offset_y = Math.clamp(this.offset_y, -999, 0);
+        this.offset_y = Math.clamp(this.offset_y, -this.contentHeight, 0);
         return true;
     }
 
@@ -156,9 +158,8 @@ public class StatsScreen extends Screen {
         int y = (height - backgroundHeight) / 2;
         //TechniqueTree window (x, y, width, height): x+8, y+8, 160, 150
         if (click.x() < x+8+241 && click.x() > x+8 && click.y() < y+8+241 && click.y() > y+8) {
-            //this.offset_x += offsetX;
             this.offset_y += offsetY;
-            this.offset_y = Math.clamp(this.offset_y, -999, 0);
+            this.offset_y = Math.clamp(this.offset_y, -this.contentHeight, 0);
             return true;
         }
         return false;
