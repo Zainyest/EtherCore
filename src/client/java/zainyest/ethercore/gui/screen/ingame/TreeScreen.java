@@ -107,54 +107,58 @@ public class TreeScreen extends Screen {
 
         // Parse tree data and render
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
-        TreeElementWidget prevT = null;
-        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // TODO reimplement this with breadth-first iterator from root (and use entry<T, T>)
-            if (player_tree.getCompoundOrEmpty(t.getName()).getBoolean("learned").isEmpty()) {
-                continue;
-            }
-            if (player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").isPresent()) {
-                t.visible = true;
-            }
-            if (!t.visible) {
-                continue;
-            }
-            //change pos
-            int currentPos_x = pos_x + (int) Math.round(this.treeOffset_x);
-            int currentPos_y = pos_y + (int) Math.round(this.treeOffset_y);
-            if (t == this.treeElementWidgets.sequencedValues().getFirst()) { // First element case
-                t.setX(currentPos_x - (t.getWidth() / 2));
-                t.setY(currentPos_y - (t.getHeight() / 2));
-            } else {
-                // TODO reference parent's position and dynamic layout here
-                TreeElementWidget parent = this.treeElementWidgets.get(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getParents()[0].getPath());
-                int parentX = parent.getX();
-                int parentY = parent.getY();
-                if (parent == prevT) {
-                    t.setX(parentX);
-                    t.setY(parentY + treeTierOffset); // TODO Get number of siblings and subdivide a semicircle with the number of siblings and extend from their angle
-                } else {
-                    assert prevT != null;
-                    t.setX(prevT.getX() + treeTierOffset);
-                    t.setY(prevT.getY());
-                }
 
-                // Draw relation line
-                Matrix3x2fStack matrices = context.getMatrices();
+        setTreeElementWidgetPositions(context, deltaTicks, mouseX, mouseY, pos_x, pos_y, viewWidth, viewHeight, player_tree);
 
-                // new matrix
-                matrices.pushMatrix();
-
-                double deltaX = parentX - t.getX();
-                double deltaY = parentY - t.getY();
-                float angle = (float) Math.atan2(deltaY, deltaX);
-                matrices.rotateAbout(angle, (float) t.getX() + ((float) t.getWidth() / 2F), (float) t.getY() + ((float) t.getHeight() / 2F) + 0.5F);
-                int length = (int) Math.round(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
-                context.drawHorizontalLine(t.getX() + (t.getWidth() / 2), t.getX() + (t.getWidth() / 2) + length, t.getY() + (t.getHeight() / 2), 0xffffffff);
-
-                matrices.popMatrix();
-            }
-            prevT = t;
-        }
+//        TreeElementWidget prevT = null;
+//        for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // TODO reimplement this with breadth-first iterator from root (and use entry<T, T>)
+//            if (player_tree.getCompoundOrEmpty(t.getName()).getBoolean("learned").isEmpty()) {
+//                continue;
+//            }
+//            if (player_tree.getCompound(t.getName()).orElseThrow().getBoolean("learned").isPresent()) {
+//                t.visible = true;
+//            }
+//            if (!t.visible) {
+//                continue;
+//            }
+//            //change pos
+//            int currentPos_x = pos_x + (int) Math.round(this.treeOffset_x);
+//            int currentPos_y = pos_y + (int) Math.round(this.treeOffset_y);
+//            if (t == this.treeElementWidgets.sequencedValues().getFirst()) { // First element case
+//                t.setX(currentPos_x - (t.getWidth() / 2));
+//                t.setY(currentPos_y - (t.getHeight() / 2));
+//            } else {
+//                // TODO reference parent's position and dynamic layout here
+//                TreeElementWidget parent = this.treeElementWidgets.get(TreeElementWidget.getParentPath(t));
+//                int parentX = parent.getX();
+//                int parentY = parent.getY();
+//                float parentAngle = parent.getAngle();
+//                if (parent == prevT) {
+//                    t.setX(parentX);
+//                    t.setY(parentY + treeTierOffset); // TODO Get number of siblings and subdivide a semicircle with the number of siblings and extend from their angle
+//                } else {
+//                    assert prevT != null;
+//                    t.setX(prevT.getX() + treeTierOffset);
+//                    t.setY(prevT.getY());
+//                }
+//
+//                // Draw relation line
+//                Matrix3x2fStack matrices = context.getMatrices();
+//
+//                // new matrix
+//                matrices.pushMatrix();
+//
+//                double deltaX = parentX - t.getX();
+//                double deltaY = parentY - t.getY();
+//                float angle = (float) Math.atan2(deltaY, deltaX);
+//                matrices.rotateAbout(angle, (float) t.getX() + ((float) t.getWidth() / 2F), (float) t.getY() + ((float) t.getHeight() / 2F) + 0.5F);
+//                int length = (int) Math.round(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
+//                context.drawHorizontalLine(t.getX() + (t.getWidth() / 2), t.getX() + (t.getWidth() / 2) + length, t.getY() + (t.getHeight() / 2), 0xffffffff);
+//
+//                matrices.popMatrix();
+//            }
+//            prevT = t;
+//        }
 
         for (TreeElementWidget t : this.treeElementWidgets.sequencedValues()) { // Render elements
             t.render(context, mouseX, mouseY, deltaTicks);
@@ -166,6 +170,79 @@ public class TreeScreen extends Screen {
         }
 
         context.disableScissor();
+    }
+
+    private void setTreeElementWidgetPositions(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight, NbtCompound player_tree) {
+        TreeElementWidget root = this.treeElementWidgets.firstEntry().getValue();
+        if (player_tree.getCompoundOrEmpty(root.getName()).getBoolean("learned").isEmpty()) {
+            return;
+        }
+        if (player_tree.getCompound(root.getName()).orElseThrow().getBoolean("learned").isPresent()) {
+            root.visible = true;
+        }
+        if (!root.visible) {
+            return;
+        }
+        int currentPos_x = pos_x + (int) Math.round(this.treeOffset_x);
+        int currentPos_y = pos_y + (int) Math.round(this.treeOffset_y);
+        root.setX(currentPos_x - (root.getWidth() / 2));
+        root.setY(currentPos_y - (root.getHeight() / 2));
+
+        recursiveSetTreeElementChildren(context, player_tree, root);
+    }
+
+    private void recursiveSetTreeElementChildren(DrawContext context, NbtCompound player_tree, TreeElementWidget root) {
+        TreeElementWidget prevT = root;
+        int childCount = TreeElementWidget.getChildren(root).length;
+        int currentChild = 1;
+        float startingAngle = (float) (root.getAngle() + (childCount > 1 ? (-Math.PI / 2) : 0)); // starting angle in radians
+        float segmentAngle = (float) (Math.PI / childCount); // segment angle in radians
+        for (String childName : TreeElementWidget.getChildren(root)) {
+            TreeElementWidget child = this.treeElementWidgets.get(childName);
+
+            if (player_tree.getCompoundOrEmpty(child.getName()).getBoolean("learned").isEmpty()) {
+                continue;
+            }
+            if (player_tree.getCompound(child.getName()).orElseThrow().getBoolean("learned").isPresent()) {
+                child.visible = true;
+            }
+            if (!child.visible) {
+                continue;
+            }
+
+            TreeElementWidget parent = this.treeElementWidgets.get(TreeElementWidget.getParentPath(child)); // TODO: is this needed? see root
+            int parentX = parent.getX();
+            int parentY = parent.getY();
+            float parentAngle = parent.getAngle();
+
+            int dx;
+            int dy;
+            if (parent == prevT) {
+                child.setAngle(startingAngle);
+            } else {
+                child.setAngle(startingAngle + segmentAngle * currentChild);
+            }
+            dx = Math.toIntExact(Math.round(treeTierOffset * Math.cos(child.getAngle())));
+            dy = Math.toIntExact(Math.round(treeTierOffset * Math.sin(child.getAngle())));
+            child.setX(parentX + dx);
+            child.setY(parentY + dy);
+
+            // Draw relation line
+            Matrix3x2fStack matrices = context.getMatrices();
+            // new matrix
+            matrices.pushMatrix();
+            double deltaX = parentX - child.getX();
+            double deltaY = parentY - child.getY();
+            float angle = (float) Math.atan2(deltaY, deltaX);
+            matrices.rotateAbout(angle, (float) child.getX() + ((float) child.getWidth() / 2F), (float) child.getY() + ((float) child.getHeight() / 2F) + 0.5F);
+            int length = (int) Math.round(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
+            context.drawHorizontalLine(child.getX() + (child.getWidth() / 2), child.getX() + (child.getWidth() / 2) + length, child.getY() + (child.getHeight() / 2), 0xffffffff);
+            matrices.popMatrix();
+
+            prevT = child;
+            recursiveSetTreeElementChildren(context, player_tree, child);
+            currentChild++;
+        }
     }
 
     /// Recursive function, adds all nodes in tree to treeElementWidgets
@@ -185,6 +262,7 @@ public class TreeScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         this.treeOffset_x -= (int) horizontalAmount;
         this.treeOffset_y += (int) verticalAmount;
+        EtherCore.LOGGER.info(String.valueOf(this.treeElementWidgets.size())); // FIXME
         return true;
     }
 

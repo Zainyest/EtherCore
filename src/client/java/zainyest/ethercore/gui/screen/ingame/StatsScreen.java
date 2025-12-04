@@ -29,7 +29,6 @@ public class StatsScreen extends Screen {
     private static final Identifier TREE_SCREEN_BACKDROP = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
     private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
 
-    //private double offset_x = 80;
     private double offset_y = 0;
     private int contentHeight = 240;
 
@@ -45,7 +44,6 @@ public class StatsScreen extends Screen {
 
     @Override
     protected void init() {
-        //offset_x = (double) (backgroundWidth - 16) / 2;
         offset_y = 0;
 
         // Create widgets here

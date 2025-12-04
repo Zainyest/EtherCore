@@ -12,7 +12,12 @@ public class QiGathering extends PassiveTechnique {
     }
 
     public QiGathering() {
-        super("qi_gathering", new Identifier[0], new Identifier[]{Identifier.of(EtherCore.MOD_ID, "mental_acuity"), Identifier.of(EtherCore.MOD_ID, "body_fortification")}, "passive", "ethercore.text.qi_gathering.description", Identifier.of(EtherCore.MOD_ID, "icon.png"));
+        super("qi_gathering",
+                new Identifier[0],
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "mental_acuity"), Identifier.of(EtherCore.MOD_ID, "body_fortification")},
+                "passive",
+                "ethercore.text.qi_gathering.description",
+                Identifier.of(EtherCore.MOD_ID, "icon.png"));
     }
 
     @Override

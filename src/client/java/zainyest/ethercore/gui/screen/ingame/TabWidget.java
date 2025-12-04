@@ -15,6 +15,8 @@ public class TabWidget extends ClickableWidget {
     // 17x20
     private static final Identifier TAB_HIGHLIGHTED_TEXTURE = Identifier.of(EtherCore.MOD_ID, "textures/gui/tab/tab_highlighted.png");
 
+    private Identifier ICON_TEXTURE = Identifier.of(EtherCore.MOD_ID, "icon.png");
+
     private final boolean isCurrent;
     private final TabWidget.ClickAction clickAction;
 
@@ -22,6 +24,13 @@ public class TabWidget extends ClickableWidget {
         super(x, y, 21, 20, Text.literal(""));
         this.isCurrent = isCurrent;
         this.clickAction = clickAction;
+    }
+
+    public TabWidget(Identifier icon, int x, int y, boolean isCurrent, TabWidget.ClickAction clickAction) {
+        super(x, y, 21, 20, Text.literal(""));
+        this.isCurrent = isCurrent;
+        this.clickAction = clickAction;
+        this.ICON_TEXTURE = icon;
     }
 
     public boolean isCurrent() {return this.isCurrent;}
@@ -36,6 +45,7 @@ public class TabWidget extends ClickableWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isCurrent ? TAB_HIGHLIGHTED_TEXTURE : TAB_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, this.isCurrent ? 21 : 17, 20);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON_TEXTURE, this.getX() + 5, this.getY() + 5, 0, 0, 10, 10, 10, 10, this.isCurrent ? 0xFFFFFFFF : 0xDDFFFFFF);
     }
 
     @Override

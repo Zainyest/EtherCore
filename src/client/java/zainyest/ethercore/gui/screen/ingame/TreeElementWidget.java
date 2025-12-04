@@ -15,8 +15,7 @@ import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.init.EtherRegistries;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class TreeElementWidget extends ClickableWidget {
     private static final Identifier TREE_ELEMENT_TEXTURE = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_element.png");
@@ -26,6 +25,7 @@ public class TreeElementWidget extends ClickableWidget {
     private final Identifier icon;
     private final String name;
     private boolean learned = false;
+    private float angle = 0;
 
     public TreeElementWidget(int x, int y, int width, int height, String name, Identifier icon, MinecraftClient client) {
         super(x, y, width, height, Text.literal(""));
@@ -99,4 +99,19 @@ public class TreeElementWidget extends ClickableWidget {
         return name;
     }
 
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public static String getParentPath(TreeElementWidget t) {
+        return Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getParents()[0].getPath();
+    }
+
+    public static String[] getChildren(TreeElementWidget t) {
+        return Arrays.stream(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getChildren()).map(Identifier::getPath).toArray(String[]::new);
+    }
 }

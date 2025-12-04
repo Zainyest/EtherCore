@@ -12,7 +12,10 @@ public class BodyFortification extends PassiveTechnique {
     }
 
     public BodyFortification() {
-        super("body_fortification", new Identifier[]{Identifier.of(EtherCore.MOD_ID, "qi_gathering")}, new Identifier[0], "passive", "ethercore.text.body_fortification.description", Identifier.of(EtherCore.MOD_ID, "icon.png"));
+        super("body_fortification",
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "qi_gathering")},
+                new Identifier[0], "passive", "ethercore.text.body_fortification.description",
+                Identifier.of(EtherCore.MOD_ID, "textures/gui/technique/heart.png"));
     }
 
     @Override

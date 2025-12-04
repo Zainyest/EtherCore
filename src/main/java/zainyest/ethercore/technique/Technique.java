@@ -6,6 +6,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 
+/// <h4>To create a technique:</h4>
+/// <ul>
+/// <li>extend one of the abstract classes</li>
+/// <li>create a no-arg constructor</li>
+/// <li>register in Techniques</li>
+/// <li>add fields to lang file</li>
+/// </ul>
 public abstract class Technique {
     private final String techniqueName;
     private final Identifier[] parents;
@@ -59,11 +66,4 @@ public abstract class Technique {
 
         return techniqueData;
     }
-
-    /**
-     * Actualize the effects of the technique.
-     * For passive should be on-tick or entity modifier,
-     * for active should use a cost and manifest an effect in the world.
-     */
-    public abstract void tick(MinecraftServer server, ServerPlayerEntity serverPlayer);
 }
