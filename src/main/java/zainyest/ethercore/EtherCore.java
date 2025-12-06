@@ -32,6 +32,8 @@ public class EtherCore implements ModInitializer {
         Techniques.init();
         EtherPools.init();
         TechniqueTrees.init();
+
         Particles.init();
+        StatusEffects.init();
     }
 }

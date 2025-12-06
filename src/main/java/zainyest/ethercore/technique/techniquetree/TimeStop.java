@@ -1,9 +1,11 @@
 package zainyest.ethercore.technique.techniquetree;
 
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
+import zainyest.ethercore.init.StatusEffects;
 import zainyest.ethercore.technique.ActivatedTechnique;
 
 public class TimeStop extends ActivatedTechnique {
@@ -25,6 +27,7 @@ public class TimeStop extends ActivatedTechnique {
     public void manifest(MinecraftServer server, ServerPlayerEntity serverPlayer) {
 
         //get the cast time, once cast time completes do:
+        serverPlayer.addStatusEffect(new StatusEffectInstance(StatusEffects.TEMPORAL_IMMUNITY_EFFECT, 5 * 20, 0, false, false));
         server.getTickManager().setFrozen(true);
         // TODO get duration and wait for duration, then unfreeze
         // store duration on caster or world, decrement on tick, when <= 0 unfreeze
