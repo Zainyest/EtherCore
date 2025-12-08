@@ -6,6 +6,8 @@ import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
+import java.util.List;
+
 public class TemporalImmunity extends PassiveTechnique {
     public TemporalImmunity(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
         super(name, parents, children, techniqueType, description, icon);
@@ -22,7 +24,7 @@ public class TemporalImmunity extends PassiveTechnique {
     }
 
     @Override
-    public void tick(MinecraftServer server, ServerPlayerEntity serverPlayer) {
+    public void tick(MinecraftServer server, ServerPlayerEntity serverPlayer, List<String> slatedForRemoval) {
 
     }
 }

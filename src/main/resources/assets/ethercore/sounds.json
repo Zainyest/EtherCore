@@ -1,0 +1,14 @@
+{
+  "time_stop": {
+    "subtitle": "sound.ethercore.time_stop",
+    "sounds": [
+      "ethercore:time_stop"
+    ]
+  },
+  "time_resume": {
+    "subtitle": "sound.ethercore.time_resume",
+    "sounds": [
+      "ethercore:time_resume"
+    ]
+  }
+}
