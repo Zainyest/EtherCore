@@ -20,7 +20,7 @@ public class TickingTechniquesManager {
     public static final String NAME_KEY = "name";
     public static final String UUID_KEY = "uuid";
 
-    public static void addTechniqueInstance(MinecraftServer server, ServerPlayerEntity serverPlayer, Technique technique, boolean shouldTick) {
+    public static void addTechniqueInstance(MinecraftServer server, ServerPlayerEntity serverPlayer, Technique technique) {
         NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
 
         NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_TECHNIQUES_KEY);
@@ -30,14 +30,6 @@ public class TickingTechniquesManager {
         out.putString(UUID_KEY, serverPlayer.getUuidAsString());
 
         activeTechniques.put(technique.getName() + "." + serverPlayer.getUuidAsString(), out);
-        worldlyData.put(ACTIVE_TECHNIQUES_KEY, activeTechniques);
-    }
-
-    public static void removeTechniqueInstance(MinecraftServer server, ServerPlayerEntity serverPlayer, Technique technique) {
-        NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
-
-        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_TECHNIQUES_KEY);
-        activeTechniques.remove(technique.getName() + "." + serverPlayer.getUuidAsString());
         worldlyData.put(ACTIVE_TECHNIQUES_KEY, activeTechniques);
     }
 

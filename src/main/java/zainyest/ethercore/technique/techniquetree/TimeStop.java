@@ -7,9 +7,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
-import zainyest.ethercore.etherstat.PlayerEtherStats;
-import zainyest.ethercore.etherstat.PlayerEtherStatsView;
-import zainyest.ethercore.init.EtherStats;
 import zainyest.ethercore.init.Sounds;
 import zainyest.ethercore.init.StatusEffects;
 import zainyest.ethercore.technique.ActivatedTechnique;
@@ -75,7 +72,7 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent {
     public void manifest(MinecraftServer server, ServerPlayerEntity serverPlayer) {
         //get the cast time, once cast time completes do:
         begin(server, serverPlayer);
-        TickingTechniquesManager.addTechniqueInstance(server, serverPlayer, this, true);
+        TickingTechniquesManager.addTechniqueInstance(server, serverPlayer, this);
     }
 
     /// Should only be called if this.isActive(serverPlayer) == true
