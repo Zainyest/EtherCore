@@ -11,25 +11,24 @@ import zainyest.ethercore.init.Sounds;
 import zainyest.ethercore.init.StatusEffects;
 import zainyest.ethercore.technique.ActivatedTechnique;
 import zainyest.ethercore.technique.CausesWorldEvent;
+import zainyest.ethercore.technique.TickingTechnique;
 import zainyest.ethercore.technique.TickingTechniquesManager;
 import zainyest.ethercore.util.StateSaverAndLoader;
 
 import java.util.List;
 
-public class TimeStop extends ActivatedTechnique implements CausesWorldEvent {
+public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, TickingTechnique {
 
     public final String TIME_REMAINING = this.getName() + ".time_remaining";
 
-    public TimeStop(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
-        super(name, parents, children, techniqueType, description, icon);
+    public TimeStop(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
+        super(name, parents, children, icon);
     }
 
     public TimeStop() {
         super("time_stop",
-                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "mental_acuity")},
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "temporal_immunity")},
                 new Identifier[0],
-                "active",
-                "ethercore.text.time_stop.description",
                 Identifier.of(EtherCore.MOD_ID, "icon.png"));
 
     }
@@ -72,7 +71,7 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent {
     public void manifest(MinecraftServer server, ServerPlayerEntity serverPlayer) {
         //get the cast time, once cast time completes do:
         begin(server, serverPlayer);
-        TickingTechniquesManager.addTechniqueInstance(server, serverPlayer, this);
+        TickingTechniquesManager.addSingletonTechniqueInstance(server, serverPlayer, this);
     }
 
     /// Should only be called if this.isActive(serverPlayer) == true

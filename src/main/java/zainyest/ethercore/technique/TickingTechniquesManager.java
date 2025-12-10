@@ -16,26 +16,26 @@ import java.util.UUID;
 
 public class TickingTechniquesManager {
 
-    public static final String ACTIVE_TECHNIQUES_KEY = "active_techniques";
+    public static final String ACTIVE_SINGLETON_TECHNIQUES_KEY = "active_singleton_techniques";
     public static final String NAME_KEY = "name";
     public static final String UUID_KEY = "uuid";
 
-    public static void addTechniqueInstance(MinecraftServer server, ServerPlayerEntity serverPlayer, Technique technique) {
+    public static void addSingletonTechniqueInstance(MinecraftServer server, ServerPlayerEntity serverPlayer, Technique technique) {
         NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
 
-        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_TECHNIQUES_KEY);
+        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_SINGLETON_TECHNIQUES_KEY);
 
         NbtCompound out = new NbtCompound();
         out.putString(NAME_KEY, technique.getName());
         out.putString(UUID_KEY, serverPlayer.getUuidAsString());
 
         activeTechniques.put(technique.getName() + "." + serverPlayer.getUuidAsString(), out);
-        worldlyData.put(ACTIVE_TECHNIQUES_KEY, activeTechniques);
+        worldlyData.put(ACTIVE_SINGLETON_TECHNIQUES_KEY, activeTechniques);
     }
 
-    public static void tickTechniques(MinecraftServer server) {
+    public static void tickSingletonTechniques(MinecraftServer server) {
         NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
-        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_TECHNIQUES_KEY);
+        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_SINGLETON_TECHNIQUES_KEY);
         List<String> slatedForRemoval = new LinkedList<>();
 
         for (Map.Entry<String, NbtElement> entry : activeTechniques.entrySet()) {
@@ -44,13 +44,13 @@ public class TickingTechniquesManager {
             if (EtherRegistries.TECHNIQUES.containsId(Identifier.of(EtherCore.MOD_ID, techniqueName))) {
                 ((TickingTechnique) EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, techniqueName))).tick(server, server.getPlayerManager().getPlayer(uuid), slatedForRemoval);
             } else {
-                EtherCore.LOGGER.atError().log("NO TECHNIQUE FOUND: " + Identifier.of(EtherCore.MOD_ID, techniqueName));
+                EtherCore.LOGGER.atError().log("NO TECHNIQUE FOUND: " + techniqueName);
             }
         }
 
         for (String entry : slatedForRemoval) {
             activeTechniques.remove(entry);
         }
-        worldlyData.put(ACTIVE_TECHNIQUES_KEY, activeTechniques);
+        worldlyData.put(ACTIVE_SINGLETON_TECHNIQUES_KEY, activeTechniques);
     }
 }

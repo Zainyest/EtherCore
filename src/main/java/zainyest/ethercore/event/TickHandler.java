@@ -28,7 +28,7 @@ public class TickHandler implements ServerTickEvents.StartTick {
     }
 
     private void handleTickingTechniques(MinecraftServer server) {
-        TickingTechniquesManager.tickTechniques(server);
+        TickingTechniquesManager.tickSingletonTechniques(server);
     }
 
     private void decrementWorldlyTimers(MinecraftServer server) {

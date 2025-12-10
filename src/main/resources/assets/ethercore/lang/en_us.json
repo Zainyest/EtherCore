@@ -49,6 +49,18 @@
   "ethercore.text.mental_acuity.description": "With the mind as sharp as any sword, the world will bend to your vision.",
   "ethercore.text.temporal_immunity.name": "Temporal Immunity",
   "ethercore.text.temporal_immunity.description": "Time magic does not affect the player.",
+  "ethercore.text.create_time_frozen_armament.name": "Create Time-Frozen Armament",
+  "ethercore.text.create_time_frozen_armament.description": "Create a blade forged from time-frozen air.",
+  "ethercore.text.ether_weaving.name": "Ether Weaving",
+  "ethercore.text.ether_weaving.description": "Gain the ability to weave ether into spells.",
+  "ethercore.text.ether_manipulation.name": "Ether Manipulation",
+  "ethercore.text.ether_manipulation.description": "As Ether flows to thy intent, thy soul shall shake the heavens.",
+  "ethercore.text.time_manipulation.name": "Time Manipulation",
+  "ethercore.text.time_manipulation.description": "Gain access to time magic.",
   "ethercore.text.time_stop.name": "Time Stop",
-  "ethercore.text.time_stop.description": "Tier 9 magic, stops time from the players perspective. \n\nOther players can see what they do from their perspective if they have Hyper-Cognition, Reactive Temporal Vision, Greater Haste, and/or Time Stop with reactive casting and \"time stop\" as the trigger."
+  "ethercore.text.time_stop.description": "Tier 9 magic, stops time from the players perspective. \n\nOther players can see what they do from their perspective if they have Hyper-Cognition, Reactive Temporal Vision, Greater Haste, and/or Time Stop with reactive casting and \"time stop\" as the trigger.",
+
+  "item.ethercore.time_frozen_armament": "Time-Frozen Armament",
+
+  "effect.ethercore.temporal_immunity_effect": "Temporal Immunity"
 }

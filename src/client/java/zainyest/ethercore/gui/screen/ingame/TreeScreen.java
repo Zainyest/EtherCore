@@ -66,7 +66,7 @@ public class TreeScreen extends Screen {
         // Tree List instantiation
         treeElementWidgets = new LinkedHashMap<>();
         Technique root = TechniqueTrees.TECHNIQUE_TREE.rootTechnique();
-        instantiateTreeList(root);
+        instantiateTreeList(root, null);
     }
 
     @Override
@@ -142,14 +142,16 @@ public class TreeScreen extends Screen {
     }
 
     private void recursiveSetTreeElementChildren(DrawContext context, NbtCompound player_tree, TreeElementWidget parent, int tier) {
+        int childCount = parent.getChildren().size();
+        if (childCount == 0) {
+            return;
+        }
         TreeElementWidget prevT = parent;
-        int childCount = TreeElementWidget.getChildren(parent).length;
         int currentChild = 1;
         float startingAngle = (float) (parent.getAngle() + (childCount > 1 ? (-Math.PI / 2) : 0)); // starting angle in radians
-        float segmentAngle = (float) (Math.PI / childCount); // segment angle in radians
-        for (String childName : TreeElementWidget.getChildren(parent)) {
-            TreeElementWidget child = this.treeElementWidgets.get(childName);
-
+        float rootSegmentAngle = (float) (Math.PI * 2 / (childCount)); // segment angle for first tier in radians
+        float segmentAngle = (float) (Math.PI / (childCount + 1)); // segment angle in radians
+        for (TreeElementWidget child : parent.getChildren()) {
             if (player_tree.getCompoundOrEmpty(child.getName()).getBoolean("learned").isEmpty()) {
                 continue;
             }
@@ -163,9 +165,17 @@ public class TreeScreen extends Screen {
             int dx;
             int dy;
             if (parent == prevT) {
-                child.setAngle(startingAngle);
+                if (tier == 1) {
+                    child.setAngle(startingAngle);
+                } else {
+                    child.setAngle(startingAngle + (childCount > 1 ? segmentAngle : 0));
+                }
             } else {
-                child.setAngle(startingAngle + segmentAngle * currentChild);
+                if (tier == 1) {
+                    child.setAngle(startingAngle + rootSegmentAngle * (currentChild - 1));
+                } else {
+                    child.setAngle(startingAngle + segmentAngle * (currentChild));
+                }
             }
             dx = Math.toIntExact(Math.round(treeTierOffset * Math.cos(child.getAngle())));
             dy = Math.toIntExact(Math.round(treeTierOffset * Math.sin(child.getAngle())));
@@ -185,21 +195,25 @@ public class TreeScreen extends Screen {
             matrices.popMatrix();
 
             prevT = child;
-            recursiveSetTreeElementChildren(context, player_tree, child, tier++);
+            recursiveSetTreeElementChildren(context, player_tree, child, tier + 1);
             currentChild++;
         }
     }
 
     /// Recursive function, adds all nodes in tree to treeElementWidgets
-    private void instantiateTreeList(Technique current) {
-        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, current.getName(), current.getIcon(), this.client);
+    private void instantiateTreeList(Technique current, TreeElementWidget parent) {
+        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, parent, current.getName(), current.getIcon(), this.client);
         elementWidget.visible = false;
 
         this.treeElementWidgets.put(current.getName(), elementWidget);
         this.addSelectableChild(elementWidget);
 
+        if (parent != null) {
+            parent.children.add(elementWidget);
+        }
+
         for (Identifier id : current.getChildren()) {
-            instantiateTreeList(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(id)));
+            instantiateTreeList(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(id)), elementWidget);
         }
     }
 
@@ -207,7 +221,6 @@ public class TreeScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         this.treeOffset_x -= (int) horizontalAmount;
         this.treeOffset_y += (int) verticalAmount;
-        EtherCore.LOGGER.info(String.valueOf(this.treeElementWidgets.size())); // FIXME
         return true;
     }
 

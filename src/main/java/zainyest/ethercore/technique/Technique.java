@@ -1,8 +1,6 @@
 package zainyest.ethercore.technique;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import zainyest.ethercore.EtherCore;
 
@@ -17,16 +15,12 @@ public abstract class Technique {
     private final String techniqueName;
     private final Identifier[] parents;
     private final Identifier[] children;
-    private final String techniqueType;
-    private final String description;
     private final Identifier icon;
 
-    public Technique(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
+    public Technique(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
         this.techniqueName = name;
         this.parents = parents;
         this.children = children;
-        this.techniqueType = techniqueType;
-        this.description = description;
         this.icon = icon;
     }
 
@@ -41,13 +35,10 @@ public abstract class Technique {
         return this.children;
     }
     public String getDescription() {
-        return description;
+        return "ethercore.text." + this.techniqueName + ".description";
     }
     public Identifier getIcon() {
         return icon;
-    }
-    public String getTechniqueType() {
-        return this.techniqueType;
     }
 
     public String getTranslatableName() {

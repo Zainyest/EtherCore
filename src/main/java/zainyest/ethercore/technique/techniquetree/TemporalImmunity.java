@@ -9,22 +9,25 @@ import zainyest.ethercore.technique.PassiveTechnique;
 import java.util.List;
 
 public class TemporalImmunity extends PassiveTechnique {
-    public TemporalImmunity(String name, Identifier[] parents, Identifier[] children, String techniqueType, String description, Identifier icon) {
-        super(name, parents, children, techniqueType, description, icon);
+    public TemporalImmunity(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
+        super(name, parents, children, icon);
     }
 
     public TemporalImmunity() {
         super("temporal_immunity",
-                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "mental_acuity")},
-                new Identifier[0],
-                "passive",
-                "ethercore.text.temporal_immunity.description",
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "time_manipulation")},
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "time_stop")},
                 Identifier.of(EtherCore.MOD_ID, "icon.png"));
 
     }
 
     @Override
-    public void tick(MinecraftServer server, ServerPlayerEntity serverPlayer, List<String> slatedForRemoval) {
+    public void apply(MinecraftServer server, ServerPlayerEntity serverPlayer) {
+
+    }
+
+    @Override
+    public void remove(MinecraftServer server, ServerPlayerEntity serverPlayer) {
 
     }
 }

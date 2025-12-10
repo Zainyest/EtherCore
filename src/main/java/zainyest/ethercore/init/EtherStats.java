@@ -9,7 +9,7 @@ public class EtherStats {
     //public static final EtherStat EXAMPLE_STAT = registerStat("example_stat", new EtherStat("example_stat", 10));
 
     //Body
-    public static final EtherStat STRENGTH = registerStat("duration", new EtherStat("duration", 10));
+    public static final EtherStat STRENGTH = registerStat("strength", new EtherStat("strength", 10));
     public static final EtherStat DEXTERITY = registerStat("dexterity", new EtherStat("dexterity", 10));
     public static final EtherStat VIGOR = registerStat("vigor", new EtherStat("vigor", 10));
     public static final EtherStat ENDURANCE = registerStat("endurance", new EtherStat("endurance", 10));

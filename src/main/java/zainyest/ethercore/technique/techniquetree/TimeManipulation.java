@@ -8,15 +8,15 @@ import zainyest.ethercore.technique.PassiveTechnique;
 
 import java.util.List;
 
-public class MentalAcuity extends PassiveTechnique {
-    public MentalAcuity(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
+public class TimeManipulation extends PassiveTechnique {
+    public TimeManipulation(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
         super(name, parents, children, icon);
     }
 
-    public MentalAcuity() {
-        super("mental_acuity",
-                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "qi_gathering")},
-                new Identifier[0],
+    public TimeManipulation() {
+        super("time_manipulation",
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "mental_acuity")},
+                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "temporal_immunity"), Identifier.of(EtherCore.MOD_ID, "create_time_frozen_armament")},
                 Identifier.of(EtherCore.MOD_ID, "icon.png"));
     }
 

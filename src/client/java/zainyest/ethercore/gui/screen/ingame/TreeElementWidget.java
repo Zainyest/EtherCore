@@ -24,20 +24,39 @@ public class TreeElementWidget extends ClickableWidget {
     private final MinecraftClient client;
     private final Identifier icon;
     private final String name;
+    private boolean selected = false;
     private boolean learned = false;
     private float angle = 0;
+    private TreeElementWidget parent;
+    public LinkedList<TreeElementWidget> children = new LinkedList<>();
 
-    public TreeElementWidget(int x, int y, int width, int height, String name, Identifier icon, MinecraftClient client) {
+    public TreeElementWidget(int x, int y, int width, int height, TreeElementWidget parent, String name, Identifier icon, MinecraftClient client) {
         super(x, y, width, height, Text.literal(""));
         this.client = client;
         this.icon = icon;
         this.name = name;
+        this.parent = parent;
+    }
+
+    private boolean isSelectable() {
+        if (parent == null) {
+            return !this.learned && noChildLearnedOrSelected();
+        }
+        return !this.learned && (parent.learned || parent.selected) && (noChildLearnedOrSelected());
+    }
+
+    private boolean noChildLearnedOrSelected() {
+        boolean anyChildLearnedOrSelected = false;
+        for (TreeElementWidget child : children) {
+            anyChildLearnedOrSelected = anyChildLearnedOrSelected || child.learned || child.selected;
+        }
+        return !anyChildLearnedOrSelected;
     }
 
     @Override
     public void onClick(Click click, boolean doubled) {
-        if (this.isHovered()) {
-            this.learned = !this.learned;
+        if (this.isHovered() && this.isSelectable()) {
+            this.selected = !this.selected;
         }
     }
 
@@ -59,8 +78,9 @@ public class TreeElementWidget extends ClickableWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         context.fill(this.getX()+3, this.getY()+3, this.getX()+3+this.width-6, this.getY()+3+this.height-6, 0xff000000);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon, this.getX()+3, this.getY()+3, 0, 0, this.width-6, this.height-6, 16-6, 16-6, this.learned ? 0xffffffff : 0x7fffffff);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon, this.getX()+3, this.getY()+3, 0, 0, this.width-6, this.height-6, 16-6, 16-6, this.selected ? 0xffffffff : 0x7fffffff);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16, this.learned ? 0xFFFFAA00 : 0xffffffff);
+        //context.drawText(client.textRenderer, String.format("%.3f", this.angle / Math.PI), this.getX()+10, this.getY(), 0xffffffff, true);
     }
 
     /// SPOOKY MAGIC NUMBER ZONE
@@ -113,5 +133,9 @@ public class TreeElementWidget extends ClickableWidget {
 
     public static String[] getChildren(TreeElementWidget t) {
         return Arrays.stream(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getChildren()).map(Identifier::getPath).toArray(String[]::new);
+    }
+
+    public LinkedList<TreeElementWidget> getChildren() {
+        return this.children;
     }
 }

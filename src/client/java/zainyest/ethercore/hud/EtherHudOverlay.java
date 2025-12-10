@@ -35,16 +35,16 @@ public class EtherHudOverlay {
         // render mental energy bar top left
         EtherPoolView mentalEnergy = EtherPools.MENTAL_ENERGY.fromPlayerData(EtherCoreClient.clientPlayerData);
         float mentalEnergyPercentFilled = ((float) mentalEnergy.val()) / ((float) mentalEnergy.max());
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 14, 0, 5, (int) (182*mentalEnergyPercentFilled), 5, 182,10, 0xff7f7fff);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 14, 0, 0, 182, 5, 182,10);
-        context.drawTextWithShadow(client.textRenderer, Text.literal(mentalEnergy.val() + "/" + mentalEnergy.max()).fillStyle(Style.EMPTY.withColor(Formatting.BLUE)), 188, 14, 0xff7f7fff);
+//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 14, 0, 5, (int) (182*mentalEnergyPercentFilled), 5, 182,10, 0xff7f7fff);
+//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 14, 0, 0, 182, 5, 182,10);
+//        context.drawTextWithShadow(client.textRenderer, Text.literal(mentalEnergy.val() + "/" + mentalEnergy.max()).fillStyle(Style.EMPTY.withColor(Formatting.BLUE)), 188, 14, 0xff7f7fff);
 
         // render ether bar top left
         EtherPoolView ether = EtherPools.ETHER.fromPlayerData(EtherCoreClient.clientPlayerData);
         float etherPercentFilled = ((float) ether.val()) / ((float) ether.max());
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 24, 0, 5, (int) (182*etherPercentFilled), 5, 182,10);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 24, 0, 0, 182, 5, 182,10);
-        context.drawTextWithShadow(client.textRenderer, Text.literal(ether.val() + "/" + ether.max()).fillStyle(Style.EMPTY.withColor(Formatting.AQUA)), 188, 24, 0xff7fff7f);
+//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 24, 0, 5, (int) (182*etherPercentFilled), 5, 182,10);
+//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 24, 0, 0, 182, 5, 182,10);
+//        context.drawTextWithShadow(client.textRenderer, Text.literal(ether.val() + "/" + ether.max()).fillStyle(Style.EMPTY.withColor(Formatting.AQUA)), 188, 24, 0xff7fff7f);
 
         int x = 2;
         int y = context.getScaledWindowHeight() - 42;
@@ -53,11 +53,14 @@ public class EtherHudOverlay {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of(EtherCore.MOD_ID, "textures/gui/mentalpool_and_etherpool/semicircle_border.png"), x, y, 0, 0, 40, 40, 40, 40);
 
         int etherTextureNum = Float.isNaN(etherPercentFilled) ? 27 : Math.clamp(Math.round((1-etherPercentFilled) * 27), 1, 27);
-        Identifier etherFilledTexture = Identifier.of(EtherCore.MOD_ID, "textures/gui/mentalpool_and_etherpool/" + "main_pool" + etherTextureNum + ".png");
+        Identifier etherFilledTexture = Identifier.of(EtherCore.MOD_ID, "textures/gui/mentalpool_and_etherpool/main_pool" + etherTextureNum + ".png");
         context.drawTexture(RenderPipelines.GUI_TEXTURED, etherFilledTexture, x, y, 0, 0, 40, 40, 40, 40);
 
         int mentalTextureNum = Float.isNaN(mentalEnergyPercentFilled) ? 53 : Math.clamp(Math.round((1-mentalEnergyPercentFilled) * 53), 1, 53);
-        Identifier mentalFilledTexture = Identifier.of(EtherCore.MOD_ID, "textures/gui/mentalpool_and_etherpool/" + "semicircle_pool" + mentalTextureNum + ".png");
+        Identifier mentalFilledTexture = Identifier.of(EtherCore.MOD_ID, "textures/gui/mentalpool_and_etherpool/semicircle_pool" + mentalTextureNum + ".png");
         context.drawTexture(RenderPipelines.GUI_TEXTURED, mentalFilledTexture, x, y, 0, 0, 40, 40, 40, 40);
+
+        context.drawTextWithShadow(client.textRenderer, Text.literal(ether.val() + "/" + ether.max()).fillStyle(Style.EMPTY.withColor(Formatting.AQUA)), x + 42, y, 0xff7fff7f);
+        context.drawTextWithShadow(client.textRenderer, Text.literal(mentalEnergy.val() + "/" + mentalEnergy.max()).fillStyle(Style.EMPTY.withColor(Formatting.BLUE)), x + 42, y + 10, 0xff7f7fff);
     }
 }
