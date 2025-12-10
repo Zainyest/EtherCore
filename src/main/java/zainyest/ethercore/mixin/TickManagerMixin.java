@@ -22,7 +22,7 @@ public abstract class TickManagerMixin {
     @Inject(at = @At("HEAD"), method = "shouldSkipTick", cancellable = true)
     private void shouldSkipTick(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if (entity instanceof PlayerEntity && this.isFrozen()) {
-            if (((PlayerEntity) entity).getGameMode() == GameMode.SURVIVAL) { // TODO: instead of survival predicate use custom entity data or effect
+            if (((PlayerEntity) entity).getGameMode() == GameMode.SURVIVAL || ((PlayerEntity) entity).getGameMode() == GameMode.ADVENTURE) {
                 cir.setReturnValue(true);
             }
         }
