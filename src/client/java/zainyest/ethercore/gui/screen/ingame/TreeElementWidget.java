@@ -80,7 +80,6 @@ public class TreeElementWidget extends ClickableWidget {
         context.fill(this.getX()+3, this.getY()+3, this.getX()+3+this.width-6, this.getY()+3+this.height-6, 0xff000000);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon, this.getX()+3, this.getY()+3, 0, 0, this.width-6, this.height-6, 16-6, 16-6, this.selected ? 0xffffffff : 0x7fffffff);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16, this.learned ? 0xFFFFAA00 : 0xffffffff);
-        //context.drawText(client.textRenderer, String.format("%.3f", this.angle / Math.PI), this.getX()+10, this.getY(), 0xffffffff, true);
     }
 
     /// SPOOKY MAGIC NUMBER ZONE
@@ -125,14 +124,6 @@ public class TreeElementWidget extends ClickableWidget {
 
     public void setAngle(float angle) {
         this.angle = angle;
-    }
-
-    public static String getParentPath(TreeElementWidget t) {
-        return Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getParents()[0].getPath();
-    }
-
-    public static String[] getChildren(TreeElementWidget t) {
-        return Arrays.stream(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, t.getName()))).getChildren()).map(Identifier::getPath).toArray(String[]::new);
     }
 
     public LinkedList<TreeElementWidget> getChildren() {
