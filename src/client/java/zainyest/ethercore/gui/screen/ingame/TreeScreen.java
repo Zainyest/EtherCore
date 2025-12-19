@@ -18,6 +18,7 @@ import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.technique.Technique;
 import zainyest.ethercore.init.EtherRegistries;
 import zainyest.ethercore.init.TechniqueTrees;
+import zainyest.ethercore.util.Trie;
 
 import java.util.LinkedHashMap;
 import java.util.Objects;
@@ -34,6 +35,8 @@ public class TreeScreen extends Screen {
     private static final int treeTierOffset = 30;
 
     public LinkedHashMap<String, TreeElementWidget> treeElementWidgets = new LinkedHashMap<>();
+
+    private Trie searchTrie;
 
     public TreeScreen() {
         super(Text.empty());
@@ -67,6 +70,8 @@ public class TreeScreen extends Screen {
         treeElementWidgets = new LinkedHashMap<>();
         Technique root = TechniqueTrees.TECHNIQUE_TREE.rootTechnique();
         instantiateTreeList(root, null);
+
+        this.searchTrie = new Trie(treeElementWidgets); // TODO add TextFieldWidget a la RecipeBookWidget
     }
 
     @Override

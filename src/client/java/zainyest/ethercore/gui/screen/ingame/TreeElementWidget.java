@@ -82,10 +82,16 @@ public class TreeElementWidget extends ClickableWidget {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16, this.learned ? 0xFFFFAA00 : 0xffffffff);
     }
 
+    public String getTextContent() {
+
+        return Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getTranslatableName()).getString() +
+                Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getDescription()).getString();
+    }
+
     /// SPOOKY MAGIC NUMBER ZONE
     public void renderToolTip(DrawContext context, int screenWidth) {
-        StringVisitable titleVisitable = StringVisitable.styled(Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name))).getTranslatableName()).getString(), Style.EMPTY.withBold(true));
-        StringVisitable descriptionVisitable = StringVisitable.plain(Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, this.name))).getDescription()).getString());
+        StringVisitable titleVisitable = StringVisitable.styled(Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getTranslatableName()).getString(), Style.EMPTY.withBold(true));
+        StringVisitable descriptionVisitable = StringVisitable.plain(Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getDescription()).getString());
         List<OrderedText> title = client.textRenderer.wrapLines(titleVisitable, 95);
         List<OrderedText> description = client.textRenderer.wrapLines(descriptionVisitable, 95);
         int toolTip_X;
