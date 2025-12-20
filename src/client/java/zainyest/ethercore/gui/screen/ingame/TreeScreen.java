@@ -5,7 +5,12 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ScreenRect;
+import net.minecraft.client.gui.navigation.NavigationAxis;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -21,9 +26,12 @@ import zainyest.ethercore.init.TechniqueTrees;
 import zainyest.ethercore.util.Trie;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TreeScreen extends Screen {
+    private static final Text SEARCH_HINT_TEXT = Text.translatable("gui.recipebook.search_hint").fillStyle(TextFieldWidget.SEARCH_STYLE);
     private final Screen parent;
     protected int backgroundWidth = 256;
     protected int backgroundHeight = 256;
@@ -36,7 +44,12 @@ public class TreeScreen extends Screen {
 
     public LinkedHashMap<String, TreeElementWidget> treeElementWidgets = new LinkedHashMap<>();
 
+    //Search bar
     private Trie searchTrie;
+    private TextFieldWidget searchField;
+    private ScreenRect searchFieldRect;
+    private String searchText = "";
+    private boolean searching;
 
     public TreeScreen() {
         super(Text.empty());
@@ -50,6 +63,8 @@ public class TreeScreen extends Screen {
 
     @Override
     protected void init() {
+        if (this.client == null) {return;}
+
         treeOffset_x = (double) (backgroundWidth - 16) / 2;
         treeOffset_y = (double) (backgroundHeight - 16) / 2;
 
@@ -71,7 +86,19 @@ public class TreeScreen extends Screen {
         Technique root = TechniqueTrees.TECHNIQUE_TREE.rootTechnique();
         instantiateTreeList(root, null);
 
-        this.searchTrie = new Trie(treeElementWidgets); // TODO add TextFieldWidget a la RecipeBookWidget
+        //Search bar instantiation
+        this.searchTrie = new Trie(treeElementWidgets);
+
+        String string = this.searchField != null ? this.searchField.getText() : "";
+        this.searchField = new TextFieldWidget(this.client.textRenderer, x + backgroundWidth - 81 - 9, y + 9, 81, 14, Text.translatable(EtherCore.id("treescreen.search").toTranslationKey()));
+        this.searchField.setMaxLength(50);
+        this.searchField.setVisible(true);
+        this.searchField.setEditableColor(-1);
+        this.searchField.setText(string);
+        this.searchField.setPlaceholder(SEARCH_HINT_TEXT);
+        this.searchFieldRect = ScreenRect.of(
+                NavigationAxis.HORIZONTAL, 8, this.searchField.getY(), this.searchField.getX(), this.searchField.getHeight()
+        );
     }
 
     @Override
@@ -80,6 +107,7 @@ public class TreeScreen extends Screen {
 
         //render here
         drawBackground(context, delta, mouseX, mouseY);
+        this.searchField.render(context, mouseX, mouseY, delta);
     }
 
     protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) { // TODO: create a "fullscreen" [<->] / [>-<] button
@@ -234,12 +262,121 @@ public class TreeScreen extends Screen {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         //TechniqueTree window (x, y, width, height): x+8, y+8, 160, 150
+        if (this.searchField.isFocused()) {
+            return this.searchField != null && this.searchField.isFocused() ? this.searchField.mouseDragged(click, offsetX, offsetY) : false;
+        }
         if (click.x() < x+8+241 && click.x() > x+8 && click.y() < y+8+241 && click.y() > y+8) {
             this.treeOffset_x += offsetX;
             this.treeOffset_y += offsetY;
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        Optional<Element> optional = this.hoveredElement(click.x(), click.y());
+        if (optional.isPresent()) {
+            Element element = (Element)optional.get();
+            if (element.mouseClicked(click, doubled) && element.isClickable()) {
+                this.setFocused(element);
+                if (click.button() == 0) {
+                    this.setDragging(true);
+                }
+            }
+            return true;
+        }
+
+        if (this.searchField != null) {
+            boolean bl = this.searchFieldRect != null && this.searchFieldRect.contains(MathHelper.floor(click.x()), MathHelper.floor(click.y()));
+            if (bl || this.searchField.mouseClicked(click, doubled)) {
+                this.searchField.setFocused(true);
+                return true;
+            }
+
+            this.searchField.setFocused(false);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(KeyInput input) {
+        if (this.client == null || this.client.player == null) {return false;}
+
+        this.searching = false;
+        if (this.client.player.isSpectator()) {
+            return false;
+        } else if (input.isEscape()) {
+            this.close();
+            return true;
+        } else if (this.searchField.keyPressed(input)) {
+            this.refreshSearchResults();
+            return true;
+        } else if (this.searchField.isFocused() && this.searchField.isVisible() && !input.isEscape()) {
+            return true;
+        } else if (this.client.options.chatKey.matchesKey(input) && !this.searchField.isFocused()) {
+            this.searching = true;
+            this.searchField.setFocused(true);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean keyReleased(KeyInput input) {
+        this.searching = false;
+        return super.keyReleased(input);
+    }
+
+    @Override
+    public boolean charTyped(CharInput input) {
+        if (this.client == null || this.client.player == null) {return false;}
+
+        if (this.searching) {
+            return false;
+        } else if (this.client.player.isSpectator()) {
+            return false;
+        } else if (this.searchField.charTyped(input)) {
+            this.refreshSearchResults();
+            return true;
+        } else {
+            return super.charTyped(input);
+        }
+    }
+
+    private void refreshSearchResults() {
+        String string = this.searchField.getText();
+        if (!this.searchText.equals(string)) {
+            for (TreeElementWidget treeElementWidget : this.treeElementWidgets.values()) {
+                treeElementWidget.matchesSearch = false;
+            }
+
+            LinkedList<String> techniqueKeys = new LinkedList<>();
+            for (String term : string.split("\\s")) {
+                LinkedList<String> results = this.searchTrie.getTechniqueKeys(term);
+                if (results == null || results.isEmpty()) {
+                    continue;
+                }
+                for (String value : results) {
+                    if (value == null) {
+                        continue;
+                    }
+                    techniqueKeys.add(value);
+                }
+            }
+
+            for (String key : techniqueKeys) {
+                this.treeElementWidgets.get(key).matchesSearch = true;
+            }
+
+        } else if (string.isEmpty()) {
+            for (TreeElementWidget treeElementWidget : this.treeElementWidgets.values()) {
+                treeElementWidget.matchesSearch = false;
+            }
+        }
+        this.searchText = this.searchField.getText();
     }
 
     @Override

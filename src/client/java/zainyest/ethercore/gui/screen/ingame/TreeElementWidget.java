@@ -29,6 +29,7 @@ public class TreeElementWidget extends ClickableWidget {
     private float angle = 0;
     private TreeElementWidget parent;
     public LinkedList<TreeElementWidget> children = new LinkedList<>();
+    public boolean matchesSearch = false;
 
     public TreeElementWidget(int x, int y, int width, int height, TreeElementWidget parent, String name, Identifier icon, MinecraftClient client) {
         super(x, y, width, height, Text.literal(""));
@@ -80,11 +81,14 @@ public class TreeElementWidget extends ClickableWidget {
         context.fill(this.getX()+3, this.getY()+3, this.getX()+3+this.width-6, this.getY()+3+this.height-6, 0xff000000);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.icon, this.getX()+3, this.getY()+3, 0, 0, this.width-6, this.height-6, 16-6, 16-6, this.selected ? 0xffffffff : 0x7fffffff);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, this.isFocused() || this.isHovered() ? TREE_ELEMENT_HIGHLIGHTED_TEXTURE : TREE_ELEMENT_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, 16, 16, this.learned ? 0xFFFFAA00 : 0xffffffff);
+        if (this.matchesSearch) {
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TREE_ELEMENT_HIGHLIGHTED_TEXTURE, this.getX()-1, this.getY()-1, 0, 0, this.width+2, this.height+2, 16+2, 16+2, this.learned ? 0xFFFFAA00 : 0xffffff00);
+        }
     }
 
     public String getTextContent() {
 
-        return Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getTranslatableName()).getString() +
+        return Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getTranslatableName()).getString() + "\n" +
                 Text.translatable(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(EtherCore.id(this.name))).getDescription()).getString();
     }
 
@@ -98,10 +102,10 @@ public class TreeElementWidget extends ClickableWidget {
         if (this.getX() < screenWidth/2) {
             toolTip_X = this.width;
         } else {
-            toolTip_X = -100;
+            toolTip_X = -110;
         }
         int backgroundHeight = 15 + client.textRenderer.getWrappedLinesHeight(titleVisitable, 95) + client.textRenderer.getWrappedLinesHeight(descriptionVisitable, 95);
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, TREE_ELEMENT_TOOLTIP_SPRITE, this.getX() + toolTip_X, this.getY(), 100, backgroundHeight);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, TREE_ELEMENT_TOOLTIP_SPRITE, this.getX() + toolTip_X, this.getY(), 110, backgroundHeight);
         drawText(context, title, this.getX() + toolTip_X + 6, this.getY() + 6, 0xFF0059FF);
         drawText(context, description, this.getX() + toolTip_X + 6, this.getY() + 6 + client.textRenderer.getWrappedLinesHeight(titleVisitable, 95) + 3, 0xFFFFFFFF);
     }
