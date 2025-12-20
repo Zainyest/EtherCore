@@ -6,13 +6,7 @@ import java.util.*;
 
 /// Null-terminated word trie, implemented with TreeScreen in mind
 public class Trie {
-
-    private TrieNode root;
-
-    public Trie(TrieNode root) {
-        this.root = root;
-    }
-
+    private final TrieNode root;
 
     public Trie(LinkedHashMap<String, TreeElementWidget> treeElements) {
         this.root = new TrieNode(null, new HashMap<>(), new LinkedList<>());
@@ -40,6 +34,9 @@ public class Trie {
     }
 
     private LinkedList<String> traverseTrie(char[] chars, int i, TrieNode cur) {
+        if (chars == null || chars.length == 0) {
+            return null;
+        }
         if (chars.length-1 == i && cur.children().containsKey(chars[i])) {
             return cur.children().get(chars[i]).techniqueKeys();
         }
