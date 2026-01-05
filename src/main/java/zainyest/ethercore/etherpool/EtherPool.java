@@ -1,8 +1,8 @@
 package zainyest.ethercore.etherpool;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
 import zainyest.ethercore.etherstat.PlayerEtherStatsView;
@@ -33,15 +33,15 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
         return poolVal;
     }
 
-    public NbtCompound instantiateNbt() {
+    public CompoundTag instantiateNbt() {
         return toNbt(instantiateView());
     }
     public EtherPoolView instantiateView() {
         return  new EtherPoolView(this.poolName, 0, 0, 0);
     }
 
-    public NbtCompound toNbt(EtherPoolView view) {
-        NbtCompound out = new NbtCompound();
+    public CompoundTag toNbt(EtherPoolView view) {
+        CompoundTag out = new CompoundTag();
 
         out.putString("name", this.poolName);
         out.putInt("regen_rate", view.regenRate());
@@ -51,8 +51,8 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
         return out;
     }
 
-    public EtherPoolView fromNbt(NbtCompound nbtIn) {
-        NbtCompound nbt = nbtIn.getCompoundOrEmpty(this.poolName);
+    public EtherPoolView fromNbt(CompoundTag nbtIn) {
+        CompoundTag nbt = nbtIn.getCompoundOrEmpty(this.poolName);
         return new EtherPoolView(this.poolName,
                 nbt.getInt("regen_rate").orElse(0),
                 nbt.getInt("max").orElse(0),
@@ -60,11 +60,11 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
     }
 
     public EtherPoolView fromPlayerData(PlayerData playerData) {
-        NbtCompound nbt = playerData.getPersistentData();
+        CompoundTag nbt = playerData.getPersistentData();
         return fromNbt(nbt);
     }
 
-    public NbtCompound getOrCreateNbt(PlayerData playerData) {
+    public CompoundTag getOrCreateNbt(PlayerData playerData) {
         if (playerData.getPersistentData().getCompoundOrEmpty(this.poolName).isEmpty()) {
             return instantiateNbt();
         }
@@ -78,14 +78,14 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
         return fromPlayerData(playerData);
     }
 
-    public void syncPool(ServerPlayerEntity player) {
+    public void syncPool(ServerPlayer player) {
         //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
 
         StateSaverAndLoader.getPlayerState(player).markDirty(this.poolName);
     }
 
     public void tickPool(MinecraftServer server) {
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (player == null) {
                 EtherCore.LOGGER.info("Null Player, skipping tickPool");
                 return;

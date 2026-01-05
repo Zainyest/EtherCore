@@ -1,7 +1,7 @@
 package zainyest.ethercore.init;
 
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.techniquetree.*;
 import zainyest.ethercore.technique.Technique;
@@ -19,7 +19,7 @@ public class Techniques {
     public static final EtherManipulation ETHER_MANIPULATION = registerTechnique("ether_manipulation", new EtherManipulation());
 
     private static <T extends Technique> T registerTechnique(String name, T technique) {
-        return Registry.register(EtherRegistries.TECHNIQUES, Identifier.of(EtherCore.MOD_ID, name), technique);
+        return Registry.register(EtherRegistries.TECHNIQUES, Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, name), technique);
     }
 
     public static void init() {

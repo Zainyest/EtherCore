@@ -1,37 +1,37 @@
 package zainyest.ethercore.technique;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.init.EtherRegistries;
 
 public record TechniqueTree(String treeName, Technique rootTechnique) {
-    public void setTechnique(ServerPlayerEntity serverPlayer, PlayerData playerData, Technique technique) {
-        NbtCompound treeData = playerData.persistentData.getCompoundOrEmpty(treeName);
+    public void setTechnique(ServerPlayer serverPlayer, PlayerData playerData, Technique technique) {
+        CompoundTag treeData = playerData.persistentData.getCompoundOrEmpty(treeName);
         treeData.put(technique.getName(), technique.toNbt());
         playerData.persistentData.put(treeName, treeData);
         syncTree(serverPlayer);
     }
 
-    public void syncTree(ServerPlayerEntity player) {
+    public void syncTree(ServerPlayer player) {
         //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
         StateSaverAndLoader.getPlayerState(player).markDirty(treeName);
     }
 
-    public void recursiveUpdateTree(ServerPlayerEntity player, PlayerData dataPlayer, Technique current) {
+    public void recursiveUpdateTree(ServerPlayer player, PlayerData dataPlayer, Technique current) {
         setTechnique(player, dataPlayer, current);
         for (Identifier id : current.getChildren()) {
-            recursiveUpdateTree(player, dataPlayer, EtherRegistries.TECHNIQUES.get(id));
+            recursiveUpdateTree(player, dataPlayer, EtherRegistries.TECHNIQUES.getValue(id));
         }
     }
 
     /// TEMPORARY TEST, SHOULD ONLY UPDATE WHEN CHANGE DETECTED
     public void tickTree(MinecraftServer server) {
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (player == null) {
                 EtherCore.LOGGER.info("Null Player, skipping tickPool");
                 return;

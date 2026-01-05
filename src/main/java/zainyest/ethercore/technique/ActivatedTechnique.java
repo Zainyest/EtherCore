@@ -1,9 +1,9 @@
 package zainyest.ethercore.technique;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public abstract class ActivatedTechnique extends Technique {
         super(name, parents, children, icon);
     }
 
-    public abstract void manifest(MinecraftServer server, ServerPlayerEntity serverPlayer);
+    public abstract void manifest(MinecraftServer server, ServerPlayer serverPlayer);
 }

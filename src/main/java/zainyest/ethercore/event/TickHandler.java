@@ -1,7 +1,7 @@
 package zainyest.ethercore.event;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import zainyest.ethercore.init.EtherRegistries;
 import zainyest.ethercore.technique.CausesWorldEvent;
@@ -32,7 +32,7 @@ public class TickHandler implements ServerTickEvents.StartTick {
     }
 
     private void decrementWorldlyTimers(MinecraftServer server) {
-        NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
+        CompoundTag worldlyData = StateSaverAndLoader.getWorldlyData(server);
 
         for (Technique technique : EtherRegistries.TECHNIQUES) {
             if (!(technique instanceof CausesWorldEvent)) {

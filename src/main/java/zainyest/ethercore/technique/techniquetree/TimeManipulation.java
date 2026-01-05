@@ -1,8 +1,8 @@
 package zainyest.ethercore.technique.techniquetree;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
@@ -15,18 +15,18 @@ public class TimeManipulation extends PassiveTechnique {
 
     public TimeManipulation() {
         super("time_manipulation",
-                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "mental_acuity")},
-                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "temporal_immunity"), Identifier.of(EtherCore.MOD_ID, "create_time_frozen_armament")},
-                Identifier.of(EtherCore.MOD_ID, "icon.png"));
+                new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "mental_acuity")},
+                new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "temporal_immunity"), Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "create_time_frozen_armament")},
+                Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "icon.png"));
     }
 
     @Override
-    public void apply(MinecraftServer server, ServerPlayerEntity serverPlayer) {
+    public void apply(MinecraftServer server, ServerPlayer serverPlayer) {
 
     }
 
     @Override
-    public void remove(MinecraftServer server, ServerPlayerEntity serverPlayer) {
+    public void remove(MinecraftServer server, ServerPlayer serverPlayer) {
 
     }
 }

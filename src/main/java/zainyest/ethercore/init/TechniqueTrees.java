@@ -1,6 +1,6 @@
 package zainyest.ethercore.init;
 
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
 import zainyest.ethercore.technique.TechniqueTree;
 
 public class TechniqueTrees {

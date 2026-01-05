@@ -1,6 +1,6 @@
 package zainyest.ethercore.etherstat;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import zainyest.ethercore.EtherCore;
 
 import java.util.LinkedHashMap;
@@ -15,11 +15,11 @@ public record EtherStat(String name, int base) {
         return EtherCore.MOD_ID + ".text." + this.name() + ".description";
     }
 
-    public NbtCompound toNbt(EtherStatView view) {
-        NbtCompound out = new NbtCompound();
+    public CompoundTag toNbt(EtherStatView view) {
+        CompoundTag out = new CompoundTag();
         out.putString("name", name);
         out.putInt("base", base);
-        NbtCompound statModifierCompound = new NbtCompound();
+        CompoundTag statModifierCompound = new CompoundTag();
         for (Map.Entry<String, Integer> entry : view.statModifiers().sequencedEntrySet()) {
             statModifierCompound.putInt(entry.getKey(), entry.getValue());
         }
@@ -27,8 +27,8 @@ public record EtherStat(String name, int base) {
         return out;
     }
 
-    public EtherStatView fromNbt(NbtCompound nbtIn) {
-        NbtCompound nbt = nbtIn.getCompoundOrEmpty(this.name);
+    public EtherStatView fromNbt(CompoundTag nbtIn) {
+        CompoundTag nbt = nbtIn.getCompoundOrEmpty(this.name);
         int base;
         LinkedHashMap<String, Integer> statModifiers = new LinkedHashMap<>();
         base = nbt.getInt("base").orElse(this.base);

@@ -1,17 +1,20 @@
 package zainyest.ethercore.gui.screen.ingame;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.*;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.etherstat.EtherStatView;
@@ -26,18 +29,18 @@ public class StatsScreen extends Screen {
     protected int backgroundWidth = 256;
     protected int backgroundHeight = 256;
 
-    private static final Identifier TREE_SCREEN_BACKDROP = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
-    private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
+    private static final Identifier TREE_SCREEN_BACKDROP = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
+    private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
 
     private double offset_y = 0;
     private int contentHeight = 240;
 
     public StatsScreen() {
-        super(Text.empty());
+        super(Component.empty());
         this.parent = null;
     }
 
-    public StatsScreen(Text title, Screen parent) {
+    public StatsScreen(Component title, Screen parent) {
         super(title);
         this.parent = parent;
     }
@@ -50,39 +53,39 @@ public class StatsScreen extends Screen {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
 
-        TabWidget treeScreenTabWidget = new TabWidget(x - 17, y + 22, false, (btn) -> MinecraftClient.getInstance().setScreen(new TreeScreen()));
-        this.addDrawableChild(treeScreenTabWidget);
+        TabWidget treeScreenTabWidget = new TabWidget(x - 17, y + 22, false, (btn) -> Minecraft.getInstance().setScreen(new TreeScreen()));
+        this.addRenderableWidget(treeScreenTabWidget);
 
         TabWidget statsScreenTabWidget = new TabWidget(x - 17, y + 22*2, true, (btn) -> {});
-        this.addDrawableChild(statsScreenTabWidget);
+        this.addRenderableWidget(statsScreenTabWidget);
 
-        TabWidget techniqueManagerScreenTabWidget = new TabWidget(x - 17, y + 22*3, false, (btn) -> MinecraftClient.getInstance().setScreen(new TreeScreen()));
-        this.addDrawableChild(techniqueManagerScreenTabWidget);
+        TabWidget techniqueManagerScreenTabWidget = new TabWidget(x - 17, y + 22*3, false, (btn) -> Minecraft.getInstance().setScreen(new TreeScreen()));
+        this.addRenderableWidget(techniqueManagerScreenTabWidget);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
         //render here
         drawBackground(context, delta, mouseX, mouseY);
     }
 
-    protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) {
+    protected void drawBackground(GuiGraphics context, float deltaTicks, int mouseX, int mouseY) {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         // background
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, TREE_SCREEN_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        context.blit(RenderPipelines.GUI_TEXTURED, TREE_SCREEN_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        context.blit(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         // lerped tree port, oscillated vertically
-        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 1000.0)));
-        int lerpedColor1 = ColorHelper.lerp(lerpedAmount, 0x140059ff, 0x28347aff);
-        int lerpedColor2 = ColorHelper.lerp(lerpedAmount, 0x28347aff, 0x140059ff);
+        float lerpedAmount = Mth.abs(Mth.sin((float) (Util.getMillis() / 1000.0)));
+        int lerpedColor1 = ARGB.srgbLerp(lerpedAmount, 0x140059ff, 0x28347aff);
+        int lerpedColor2 = ARGB.srgbLerp(lerpedAmount, 0x28347aff, 0x140059ff);
         context.fillGradient(x+8, y+8, x+8+241, y+8+241, lerpedColor1, lerpedColor2);
 
         drawStatsText(context, deltaTicks, mouseX, mouseY, x+8, y+8, 240, 240);
 
-        for (Element e : this.children()) { // render active tab over background
+        for (GuiEventListener e : this.children()) { // render active tab over background
             if (e instanceof TabWidget) {
                 if (((TabWidget) e).isCurrent()) {
                     ((TabWidget) e).renderWidget(context, mouseX, mouseY, deltaTicks);
@@ -91,7 +94,7 @@ public class StatsScreen extends Screen {
         }
     }
 
-    public void drawStatsText(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) {
+    public void drawStatsText(GuiGraphics context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) {
         int currentPos_y = pos_y + (int) Math.round(this.offset_y);
         // Parse tree data and render
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
@@ -103,20 +106,20 @@ public class StatsScreen extends Screen {
         context.disableScissor();
     }
 
-    public int renderStatsText(DrawContext context, int mouseX, int mouseY, int x, int y, int viewWidth, EtherStatView statView) {
-        StringVisitable titleVisitable = StringVisitable.styled(Text.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.get(Identifier.of(EtherCore.MOD_ID, statView.name()))).getTranslatableName()).getString(), Style.EMPTY.withBold(true));
-        StringVisitable descriptionVisitable = StringVisitable.plain(Text.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.get(Identifier.of(EtherCore.MOD_ID, statView.name()))).getTranslatableDescription()).getString());
-        StringVisitable statCompoundVisitable = StringVisitable.plain(statView.base() + " + " + (statView.getStatTotal() - statView.base()));
-        StringVisitable statModifiersVisitable = StringVisitable.plain(statView.statModifiersTranslated());
-        assert client != null;
-        List<OrderedText> title = client.textRenderer.wrapLines(titleVisitable, viewWidth);
-        List<OrderedText> description = client.textRenderer.wrapLines(descriptionVisitable, viewWidth - 6);
-        List<OrderedText> statCompound = client.textRenderer.wrapLines(statCompoundVisitable, viewWidth);
-        List<OrderedText> statModifiers = client.textRenderer.wrapLines(statModifiersVisitable, viewWidth);
-        int titleHeight = client.textRenderer.getWrappedLinesHeight(titleVisitable, viewWidth);
-        int descriptionHeight = client.textRenderer.getWrappedLinesHeight(descriptionVisitable, viewWidth);
-        int statCompoundHeight = client.textRenderer.getWrappedLinesHeight(statCompoundVisitable, viewWidth);
-        int statModifiersHeight = client.textRenderer.getWrappedLinesHeight(statModifiersVisitable, viewWidth);
+    public int renderStatsText(GuiGraphics context, int mouseX, int mouseY, int x, int y, int viewWidth, EtherStatView statView) {
+        FormattedText titleVisitable = FormattedText.of(Component.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.getValue(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, statView.name()))).getTranslatableName()).getString(), Style.EMPTY.withBold(true));
+        FormattedText descriptionVisitable = FormattedText.of(Component.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.getValue(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, statView.name()))).getTranslatableDescription()).getString());
+        FormattedText statCompoundVisitable = FormattedText.of(statView.base() + " + " + (statView.getStatTotal() - statView.base()));
+        FormattedText statModifiersVisitable = FormattedText.of(statView.statModifiersTranslated());
+        assert minecraft != null;
+        List<FormattedCharSequence> title = minecraft.font.split(titleVisitable, viewWidth);
+        List<FormattedCharSequence> description = minecraft.font.split(descriptionVisitable, viewWidth - 6);
+        List<FormattedCharSequence> statCompound = minecraft.font.split(statCompoundVisitable, viewWidth);
+        List<FormattedCharSequence> statModifiers = minecraft.font.split(statModifiersVisitable, viewWidth);
+        int titleHeight = minecraft.font.wordWrapHeight(titleVisitable, viewWidth);
+        int descriptionHeight = minecraft.font.wordWrapHeight(descriptionVisitable, viewWidth);
+        int statCompoundHeight = minecraft.font.wordWrapHeight(statCompoundVisitable, viewWidth);
+        int statModifiersHeight = minecraft.font.wordWrapHeight(statModifiersVisitable, viewWidth);
 
         int backgroundHeight = 15
                 + titleHeight
@@ -132,14 +135,14 @@ public class StatsScreen extends Screen {
         return backgroundHeight;
     }
 
-    private void drawText(DrawContext context, List<OrderedText> text, int x, int y, int color) {
-        assert this.client != null;
-        TextRenderer textRenderer = this.client.textRenderer;
+    private void drawText(GuiGraphics context, List<FormattedCharSequence> text, int x, int y, int color) {
+        assert this.minecraft != null;
+        Font textRenderer = this.minecraft.font;
 
         for(int i = 0; i < text.size(); ++i) {
-            OrderedText var10002 = text.get(i);
+            FormattedCharSequence var10002 = text.get(i);
             Objects.requireNonNull(textRenderer);
-            context.drawTextWithShadow(textRenderer, var10002, x, y + i * 9, color);
+            context.drawString(textRenderer, var10002, x, y + i * 9, color);
         }
     }
 
@@ -151,7 +154,7 @@ public class StatsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+    public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         //TechniqueTree window (x, y, width, height): x+8, y+8, 160, 150
@@ -164,8 +167,8 @@ public class StatsScreen extends Screen {
     }
 
     @Override
-    public void close() {
-        assert this.client != null;
-        this.client.setScreen(this.parent);
+    public void onClose() {
+        assert this.minecraft != null;
+        this.minecraft.setScreen(this.parent);
     }
 }

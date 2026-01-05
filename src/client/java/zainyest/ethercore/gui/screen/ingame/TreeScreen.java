@@ -1,22 +1,22 @@
 package zainyest.ethercore.gui.screen.ingame;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.navigation.NavigationAxis;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.navigation.ScreenAxis;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import org.joml.Matrix3x2fStack;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
@@ -31,13 +31,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class TreeScreen extends Screen {
-    private static final Text SEARCH_HINT_TEXT = Text.translatable("gui.recipebook.search_hint").fillStyle(TextFieldWidget.SEARCH_STYLE);
+    private static final Component SEARCH_HINT_TEXT = Component.translatable("gui.recipebook.search_hint").withStyle(EditBox.SEARCH_HINT_STYLE);
     private final Screen parent;
     protected int backgroundWidth = 256;
     protected int backgroundHeight = 256;
 
-    private static final Identifier TREE_SCREEN_BACKDROP = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
-    private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.of(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
+    private static final Identifier TREE_SCREEN_BACKDROP = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
+    private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
 
     private double treeOffset_x = 80, treeOffset_y = 75;
     private static final int treeTierOffset = 30;
@@ -46,24 +46,24 @@ public class TreeScreen extends Screen {
 
     //Search bar
     private Trie searchTrie;
-    private TextFieldWidget searchField;
-    private ScreenRect searchFieldRect;
+    private EditBox searchField;
+    private ScreenRectangle searchFieldRect;
     private String searchText = "";
     private boolean searching;
 
     public TreeScreen() {
-        super(Text.empty());
+        super(Component.empty());
         this.parent = null;
     }
 
-    public TreeScreen(Text title, Screen parent) {
+    public TreeScreen(Component title, Screen parent) {
         super(title);
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        if (this.client == null) {return;}
+        if (this.minecraft == null) {return;}
 
         treeOffset_x = (double) (backgroundWidth - 16) / 2;
         treeOffset_y = (double) (backgroundHeight - 16) / 2;
@@ -73,13 +73,13 @@ public class TreeScreen extends Screen {
         int y = (height - backgroundHeight) / 2;
 
         TabWidget treeScreenTabWidget = new TabWidget(x - 17, y + 22, true, (btn) -> {});
-        this.addDrawableChild(treeScreenTabWidget);
+        this.addRenderableWidget(treeScreenTabWidget);
 
-        TabWidget statsScreenTabWidget = new TabWidget(x - 17, y + 22*2, false, (btn) -> MinecraftClient.getInstance().setScreen(new StatsScreen()));
-        this.addDrawableChild(statsScreenTabWidget);
+        TabWidget statsScreenTabWidget = new TabWidget(x - 17, y + 22*2, false, (btn) -> Minecraft.getInstance().setScreen(new StatsScreen()));
+        this.addRenderableWidget(statsScreenTabWidget);
 
-        TabWidget techniqueManagerScreenTabWidget = new TabWidget(x - 17, y + 22*3, false, (btn) -> MinecraftClient.getInstance().setScreen(new TreeScreen()));
-        this.addDrawableChild(techniqueManagerScreenTabWidget);
+        TabWidget techniqueManagerScreenTabWidget = new TabWidget(x - 17, y + 22*3, false, (btn) -> Minecraft.getInstance().setScreen(new TreeScreen()));
+        this.addRenderableWidget(techniqueManagerScreenTabWidget);
 
         // Tree List instantiation
         treeElementWidgets = new LinkedHashMap<>();
@@ -89,20 +89,20 @@ public class TreeScreen extends Screen {
         //Search bar instantiation
         this.searchTrie = new Trie(treeElementWidgets);
 
-        String string = this.searchField != null ? this.searchField.getText() : "";
-        this.searchField = new TextFieldWidget(this.client.textRenderer, x + backgroundWidth - 81 - 9, y + 9, 81, 14, Text.translatable(EtherCore.id("treescreen.search").toTranslationKey()));
+        String string = this.searchField != null ? this.searchField.getValue() : "";
+        this.searchField = new EditBox(this.minecraft.font, x + backgroundWidth - 81 - 9, y + 9, 81, 14, Component.translatable(EtherCore.id("treescreen.search").toLanguageKey()));
         this.searchField.setMaxLength(50);
         this.searchField.setVisible(true);
-        this.searchField.setEditableColor(-1);
-        this.searchField.setText(string);
-        this.searchField.setPlaceholder(SEARCH_HINT_TEXT);
-        this.searchFieldRect = ScreenRect.of(
-                NavigationAxis.HORIZONTAL, 8, this.searchField.getY(), this.searchField.getX(), this.searchField.getHeight()
+        this.searchField.setTextColor(-1);
+        this.searchField.setValue(string);
+        this.searchField.setHint(SEARCH_HINT_TEXT);
+        this.searchFieldRect = ScreenRectangle.of(
+                ScreenAxis.HORIZONTAL, 8, this.searchField.getY(), this.searchField.getX(), this.searchField.getHeight()
         );
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
         //render here
@@ -110,21 +110,21 @@ public class TreeScreen extends Screen {
         this.searchField.render(context, mouseX, mouseY, delta);
     }
 
-    protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) { // TODO: create a "fullscreen" [<->] / [>-<] button
+    protected void drawBackground(GuiGraphics context, float deltaTicks, int mouseX, int mouseY) { // TODO: create a "fullscreen" [<->] / [>-<] button
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         // background
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, TREE_SCREEN_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        context.blit(RenderPipelines.GUI_TEXTURED, TREE_SCREEN_BACKDROP, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        context.blit(RenderPipelines.GUI_TEXTURED, CURRENT_TREE_VIEWPORT, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         // lerped tree port, oscillated vertically
-        float lerpedAmount = MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() / 1000.0)));
-        int lerpedColor1 = ColorHelper.lerp(lerpedAmount, 0x140059ff, 0x28347aff);
-        int lerpedColor2 = ColorHelper.lerp(lerpedAmount, 0x28347aff, 0x140059ff);
+        float lerpedAmount = Mth.abs(Mth.sin((float) (Util.getMillis() / 1000.0)));
+        int lerpedColor1 = ARGB.srgbLerp(lerpedAmount, 0x140059ff, 0x28347aff);
+        int lerpedColor2 = ARGB.srgbLerp(lerpedAmount, 0x28347aff, 0x140059ff);
         context.fillGradient(x+8, y+8, x+8+241, y+8+241, lerpedColor1, lerpedColor2);
 
         drawTree(context, deltaTicks, mouseX, mouseY, x+8, y+8, 240, 240);
 
-        for (Element e : this.children()) { // render active tab over background
+        for (GuiEventListener e : this.children()) { // render active tab over background
             if (e instanceof TabWidget) {
                 if (((TabWidget) e).isCurrent()) {
                     ((TabWidget) e).renderWidget(context, mouseX, mouseY, deltaTicks);
@@ -133,10 +133,10 @@ public class TreeScreen extends Screen {
         }
     }
 
-    public void drawTree(DrawContext context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) { // TODO: add [Apply] button to send technique learn updates
+    public void drawTree(GuiGraphics context, float deltaTicks, int mouseX, int mouseY, int pos_x, int pos_y, int viewWidth, int viewHeight) { // TODO: add [Apply] button to send technique learn updates
         // Needs to be pannable, clickable, scalable (maybe); scissored by viewWidth, viewHeight, and pos_x, pos_y
         // get player's tree
-        NbtCompound player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(TechniqueTrees.TECHNIQUE_TREE.treeName());
+        CompoundTag player_tree = EtherCoreClient.clientPlayerData.getPersistentData().getCompoundOrEmpty(TechniqueTrees.TECHNIQUE_TREE.treeName());
 
         // Parse tree data and render
         context.enableScissor(pos_x, pos_y, pos_x+viewWidth, pos_y+viewHeight);
@@ -155,7 +155,7 @@ public class TreeScreen extends Screen {
         context.disableScissor();
     }
 
-    private void setTreeElementWidgetPositions(DrawContext context, int pos_x, int pos_y, NbtCompound player_tree) {
+    private void setTreeElementWidgetPositions(GuiGraphics context, int pos_x, int pos_y, CompoundTag player_tree) {
         TreeElementWidget root = this.treeElementWidgets.firstEntry().getValue();
         if (player_tree.getCompoundOrEmpty(root.getName()).getBoolean("learned").isEmpty()) {
             return;
@@ -174,7 +174,7 @@ public class TreeScreen extends Screen {
         recursiveSetTreeElementChildren(context, player_tree, root, 1);
     }
 
-    private void recursiveSetTreeElementChildren(DrawContext context, NbtCompound player_tree, TreeElementWidget parent, int tier) {
+    private void recursiveSetTreeElementChildren(GuiGraphics context, CompoundTag player_tree, TreeElementWidget parent, int tier) {
         int childCount = parent.getChildren().size();
         if (childCount == 0) {
             return;
@@ -216,7 +216,7 @@ public class TreeScreen extends Screen {
             child.setY(parent.getY() + dy);
 
             // Draw relation line
-            Matrix3x2fStack matrices = context.getMatrices();
+            Matrix3x2fStack matrices = context.pose();
             // new matrix
             matrices.pushMatrix();
             double deltaX = parent.getX() - child.getX();
@@ -224,7 +224,7 @@ public class TreeScreen extends Screen {
             float angle = (float) Math.atan2(deltaY, deltaX);
             matrices.rotateAbout(angle, (float) child.getX() + ((float) child.getWidth() / 2F), (float) child.getY() + ((float) child.getHeight() / 2F) + 0.5F);
             int length = (int) Math.round(Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
-            context.drawHorizontalLine(child.getX() + (child.getWidth() / 2), child.getX() + (child.getWidth() / 2) + length, child.getY() + (child.getHeight() / 2), 0xffffffff);
+            context.hLine(child.getX() + (child.getWidth() / 2), child.getX() + (child.getWidth() / 2) + length, child.getY() + (child.getHeight() / 2), 0xffffffff);
             matrices.popMatrix();
 
             prevT = child;
@@ -235,18 +235,18 @@ public class TreeScreen extends Screen {
 
     /// Recursive function, adds all nodes in tree to treeElementWidgets
     private void instantiateTreeList(Technique current, TreeElementWidget parent) {
-        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, parent, current.getName(), current.getIcon(), this.client);
+        TreeElementWidget elementWidget = new TreeElementWidget(0, 0, 16, 16, parent, current.getName(), current.getIcon(), this.minecraft);
         elementWidget.visible = false;
 
         this.treeElementWidgets.put(current.getName(), elementWidget);
-        this.addSelectableChild(elementWidget);
+        this.addWidget(elementWidget);
 
         if (parent != null) {
             parent.children.add(elementWidget);
         }
 
         for (Identifier id : current.getChildren()) {
-            instantiateTreeList(Objects.requireNonNull(EtherRegistries.TECHNIQUES.get(id)), elementWidget);
+            instantiateTreeList(Objects.requireNonNull(EtherRegistries.TECHNIQUES.getValue(id)), elementWidget);
         }
     }
 
@@ -258,7 +258,7 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+    public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         //TechniqueTree window (x, y, width, height): x+8, y+8, 160, 150
@@ -274,11 +274,11 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
-        Optional<Element> optional = this.hoveredElement(click.x(), click.y());
+    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
+        Optional<GuiEventListener> optional = this.getChildAt(click.x(), click.y());
         if (optional.isPresent()) {
-            Element element = optional.get();
-            if (element.mouseClicked(click, doubled) && element.isClickable()) {
+            GuiEventListener element = optional.get();
+            if (element.mouseClicked(click, doubled) && element.shouldTakeFocusAfterInteraction()) {
                 this.setFocused(element);
                 if (click.button() == 0) {
                     this.setDragging(true);
@@ -288,7 +288,7 @@ public class TreeScreen extends Screen {
         }
 
         if (this.searchField != null) {
-            boolean bl = this.searchFieldRect != null && this.searchFieldRect.contains(MathHelper.floor(click.x()), MathHelper.floor(click.y()));
+            boolean bl = this.searchFieldRect != null && this.searchFieldRect.containsPoint(Mth.floor(click.x()), Mth.floor(click.y()));
             if (bl || this.searchField.mouseClicked(click, doubled)) {
                 this.searchField.setFocused(true);
                 return true;
@@ -301,21 +301,21 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
-        if (this.client == null || this.client.player == null) {return false;}
+    public boolean keyPressed(KeyEvent input) {
+        if (this.minecraft == null || this.minecraft.player == null) {return false;}
 
         this.searching = false;
-        if (this.client.player.isSpectator()) {
+        if (this.minecraft.player.isSpectator()) {
             return false;
         } else if (input.isEscape()) {
-            this.close();
+            this.onClose();
             return true;
         } else if (this.searchField.keyPressed(input)) {
             this.refreshSearchResults();
             return true;
         } else if (this.searchField.isFocused() && this.searchField.isVisible() && !input.isEscape()) {
             return true;
-        } else if (this.client.options.chatKey.matchesKey(input) && !this.searchField.isFocused()) {
+        } else if (this.minecraft.options.keyChat.matches(input) && !this.searchField.isFocused()) {
             this.searching = true;
             this.searchField.setFocused(true);
             return true;
@@ -325,18 +325,18 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean keyReleased(KeyInput input) {
+    public boolean keyReleased(KeyEvent input) {
         this.searching = false;
         return super.keyReleased(input);
     }
 
     @Override
-    public boolean charTyped(CharInput input) {
-        if (this.client == null || this.client.player == null) {return false;}
+    public boolean charTyped(CharacterEvent input) {
+        if (this.minecraft == null || this.minecraft.player == null) {return false;}
 
         if (this.searching) {
             return false;
-        } else if (this.client.player.isSpectator()) {
+        } else if (this.minecraft.player.isSpectator()) {
             return false;
         } else if (this.searchField.charTyped(input)) {
             this.refreshSearchResults();
@@ -347,7 +347,7 @@ public class TreeScreen extends Screen {
     }
 
     private void refreshSearchResults() {
-        String string = this.searchField.getText();
+        String string = this.searchField.getValue();
         if (!this.searchText.equals(string)) {
             for (TreeElementWidget treeElementWidget : this.treeElementWidgets.values()) {
                 treeElementWidget.matchesSearch = false;
@@ -376,13 +376,13 @@ public class TreeScreen extends Screen {
                 treeElementWidget.matchesSearch = false;
             }
         }
-        this.searchText = this.searchField.getText();
+        this.searchText = this.searchField.getValue();
     }
 
     @Override
-    public void close() {
-        assert this.client != null;
-        this.client.setScreen(this.parent);
+    public void onClose() {
+        assert this.minecraft != null;
+        this.minecraft.setScreen(this.parent);
     }
 
 }

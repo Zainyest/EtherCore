@@ -1,8 +1,8 @@
 package zainyest.ethercore.technique.techniquetree;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
@@ -15,18 +15,18 @@ public class BodyFortification extends PassiveTechnique {
 
     public BodyFortification() {
         super("body_fortification",
-                new Identifier[]{Identifier.of(EtherCore.MOD_ID, "qi_gathering")},
+                new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "qi_gathering")},
                 new Identifier[0],
-                Identifier.of(EtherCore.MOD_ID, "textures/gui/technique/heart.png"));
+                Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/technique/heart.png"));
     }
 
     @Override
-    public void apply(MinecraftServer server, ServerPlayerEntity serverPlayer) {
+    public void apply(MinecraftServer server, ServerPlayer serverPlayer) {
 
     }
 
     @Override
-    public void remove(MinecraftServer server, ServerPlayerEntity serverPlayer) {
+    public void remove(MinecraftServer server, ServerPlayer serverPlayer) {
 
     }
 }

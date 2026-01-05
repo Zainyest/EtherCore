@@ -2,9 +2,9 @@ package zainyest.ethercore.util;
 
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import zainyest.ethercore.etherpool.EtherPool;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
 import zainyest.ethercore.networking.payload.PlayerDataPayload;
@@ -29,10 +29,10 @@ public class EtherData {
     }
 
     public static void sendPlayerDataPayloads(MinecraftServer server) {
-        for (ServerPlayerEntity serverPlayer : server.getPlayerManager().getPlayerList()) {
+        for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
             if (playerData.isDirty()) {
-                NbtCompound nbtOut = new NbtCompound();
+                CompoundTag nbtOut = new CompoundTag();
 
                 for (String key : playerData.getDirtyElements()) {
                     nbtOut.put(key, playerData.getPersistentData().get(key));

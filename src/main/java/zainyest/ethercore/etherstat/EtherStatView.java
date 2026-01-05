@@ -1,6 +1,6 @@
 package zainyest.ethercore.etherstat;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import zainyest.ethercore.EtherCore;
 
 import java.util.LinkedHashMap;
@@ -20,7 +20,7 @@ public record EtherStatView(String name, int base, LinkedHashMap<String, Integer
 
         for (Map.Entry<String, Integer> entry : this.statModifiers().sequencedEntrySet()) {
             String translatableKey = EtherCore.MOD_ID + ".text." + this.name() + ".modifier." + entry.getKey();
-            out.append(Text.translatable(translatableKey)).append(": ").append(entry.getValue().toString());
+            out.append(Component.translatable(translatableKey)).append(": ").append(entry.getValue().toString());
             out.append("\n");
         }
 

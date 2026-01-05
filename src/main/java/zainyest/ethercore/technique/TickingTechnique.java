@@ -1,7 +1,7 @@
 package zainyest.ethercore.technique;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public interface TickingTechnique {
      * For passive should be on-tick effects, <br>
      * for active should use a cost and manifest an effect in the world.
      */
-    void tick(MinecraftServer server, ServerPlayerEntity serverPlayer, List<String> slatedForRemoval);
+    void tick(MinecraftServer server, ServerPlayer serverPlayer, List<String> slatedForRemoval);
 }

@@ -1,7 +1,7 @@
 package zainyest.ethercore.init;
 
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherpool.EtherPool;
 
@@ -11,7 +11,7 @@ public class EtherPools {
     public static EtherPool MENTAL_ENERGY = registerPool("mental_energy", new EtherPool("mental_energy", EtherStats.MIND.name(), EtherStats.FOCUS.name(), 10.0D, 0.1D));
 
     private static <T extends EtherPool> T registerPool(String name, T pool) {
-        return Registry.register(EtherRegistries.ETHER_POOLS, Identifier.of(EtherCore.MOD_ID, name), pool);
+        return Registry.register(EtherRegistries.ETHER_POOLS, Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, name), pool);
     }
 
     public static void init() {

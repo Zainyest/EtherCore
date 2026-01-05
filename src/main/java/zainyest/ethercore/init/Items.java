@@ -1,33 +1,35 @@
 package zainyest.ethercore.init;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 
 import java.util.function.Function;
+
+import static net.minecraft.world.item.Items.NETHERITE_SWORD;
 
 public class Items {
     public static final Item TIME_FROZEN_ARMAMENT = register(
             "time_frozen_armament",
             Item::new,
-            new Item.Settings().sword(ToolMaterial.NETHERITE, 1f, 1f));
+            new Item.Properties().sword(ToolMaterial.NETHERITE, 1f, 1f));
 
-    public static Item register(String name, Function<Item.Settings, Item> itemFactory, Item.Settings settings) {
-        RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(EtherCore.MOD_ID, name));
-        Item item = itemFactory.apply(settings.registryKey(itemKey));
-        Registry.register(Registries.ITEM, itemKey, item);
+    public static Item register(String name, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
+        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, name));
+        Item item = itemFactory.apply(settings.setId(itemKey));
+        Registry.register(BuiltInRegistries.ITEM, itemKey, item);
         return item;
     }
 
     public static void init() {
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
-                .register((itemGroup) -> itemGroup.addAfter(net.minecraft.item.Items.NETHERITE_SWORD, Items.TIME_FROZEN_ARMAMENT));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register((itemGroup) -> itemGroup.addAfter(net.minecraft.world.item.Items.NETHERITE_SWORD, Items.TIME_FROZEN_ARMAMENT));
     }
 }

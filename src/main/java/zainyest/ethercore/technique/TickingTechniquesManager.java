@@ -1,10 +1,10 @@
 package zainyest.ethercore.technique;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.init.EtherRegistries;
 import zainyest.ethercore.util.StateSaverAndLoader;
@@ -20,29 +20,29 @@ public class TickingTechniquesManager {
     public static final String NAME_KEY = "name";
     public static final String UUID_KEY = "uuid";
 
-    public static void addSingletonTechniqueInstance(MinecraftServer server, ServerPlayerEntity serverPlayer, Technique technique) {
-        NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
+    public static void addSingletonTechniqueInstance(MinecraftServer server, ServerPlayer serverPlayer, Technique technique) {
+        CompoundTag worldlyData = StateSaverAndLoader.getWorldlyData(server);
 
-        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_SINGLETON_TECHNIQUES_KEY);
+        CompoundTag activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_SINGLETON_TECHNIQUES_KEY);
 
-        NbtCompound out = new NbtCompound();
+        CompoundTag out = new CompoundTag();
         out.putString(NAME_KEY, technique.getName());
-        out.putString(UUID_KEY, serverPlayer.getUuidAsString());
+        out.putString(UUID_KEY, serverPlayer.getStringUUID());
 
-        activeTechniques.put(technique.getName() + "." + serverPlayer.getUuidAsString(), out);
+        activeTechniques.put(technique.getName() + "." + serverPlayer.getStringUUID(), out);
         worldlyData.put(ACTIVE_SINGLETON_TECHNIQUES_KEY, activeTechniques);
     }
 
     public static void tickSingletonTechniques(MinecraftServer server) {
-        NbtCompound worldlyData = StateSaverAndLoader.getWorldlyData(server);
-        NbtCompound activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_SINGLETON_TECHNIQUES_KEY);
+        CompoundTag worldlyData = StateSaverAndLoader.getWorldlyData(server);
+        CompoundTag activeTechniques =  worldlyData.getCompoundOrEmpty(ACTIVE_SINGLETON_TECHNIQUES_KEY);
         List<String> slatedForRemoval = new LinkedList<>();
 
-        for (Map.Entry<String, NbtElement> entry : activeTechniques.entrySet()) {
+        for (Map.Entry<String, Tag> entry : activeTechniques.entrySet()) {
             String techniqueName = entry.getValue().asCompound().get().getString(NAME_KEY).orElseThrow();
             UUID uuid = UUID.fromString(entry.getValue().asCompound().get().getString(UUID_KEY).orElseThrow());
-            if (EtherRegistries.TECHNIQUES.containsId(Identifier.of(EtherCore.MOD_ID, techniqueName))) {
-                ((TickingTechnique) EtherRegistries.TECHNIQUES.get(Identifier.of(EtherCore.MOD_ID, techniqueName))).tick(server, server.getPlayerManager().getPlayer(uuid), slatedForRemoval);
+            if (EtherRegistries.TECHNIQUES.containsKey(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, techniqueName))) {
+                ((TickingTechnique) EtherRegistries.TECHNIQUES.getValue(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, techniqueName))).tick(server, server.getPlayerList().getPlayer(uuid), slatedForRemoval);
             } else {
                 EtherCore.LOGGER.atError().log("NO TECHNIQUE FOUND: " + techniqueName);
             }

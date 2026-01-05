@@ -1,14 +1,14 @@
 package zainyest.ethercore.effect;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class TemporalImmunityEffect extends StatusEffect {
-    protected TemporalImmunityEffect(StatusEffectCategory category, int color) {
+public class TemporalImmunityEffect extends MobEffect {
+    protected TemporalImmunityEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
     public TemporalImmunityEffect() {
-        super(StatusEffectCategory.BENEFICIAL, 0xfffbf236);
+        super(MobEffectCategory.BENEFICIAL, 0xfffbf236);
     }
 }

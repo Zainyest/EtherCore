@@ -1,7 +1,7 @@
 package zainyest.ethercore.technique;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 
 /// <h4>To create a technique:</h4>
@@ -46,8 +46,8 @@ public abstract class Technique {
     }
 
     /// Returns the Technique as NbtCompound for networking and displaying
-    public NbtCompound toNbt() {
-        NbtCompound techniqueData = new NbtCompound();
+    public CompoundTag toNbt() {
+        CompoundTag techniqueData = new CompoundTag();
 
         techniqueData.putString("name", techniqueName);
 

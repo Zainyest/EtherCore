@@ -1,12 +1,12 @@
 package zainyest.ethercore.util;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerData {
-    public NbtCompound persistentData = new NbtCompound();
+    public CompoundTag persistentData = new CompoundTag();
     private boolean dirty = false;
     private final Set<String> dirtyElements = new HashSet<>();
 
@@ -34,11 +34,11 @@ public class PlayerData {
 
     public PlayerData() {}
 
-    public PlayerData(NbtCompound persistentData) {
+    public PlayerData(CompoundTag persistentData) {
         this.persistentData = persistentData;
     }
 
-    public NbtCompound getPersistentData() {
+    public CompoundTag getPersistentData() {
         return persistentData;
     }
 }

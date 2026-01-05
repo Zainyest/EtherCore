@@ -1,7 +1,7 @@
 package zainyest.ethercore.init;
 
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.EtherStat;
 
@@ -32,7 +32,7 @@ public class EtherStats {
     public static final EtherStat VISION = registerStat("vision", new EtherStat("vision", 0));
 
     private static <T extends EtherStat> T registerStat(String name, T stat) {
-        return Registry.register(EtherRegistries.ETHER_STATS, Identifier.of(EtherCore.MOD_ID, name), stat);
+        return Registry.register(EtherRegistries.ETHER_STATS, Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, name), stat);
     }
 
     public static void init() {
