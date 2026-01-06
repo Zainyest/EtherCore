@@ -15,6 +15,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import org.jspecify.annotations.NonNull;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.etherstat.EtherStatView;
@@ -64,7 +65,7 @@ public class StatsScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void render(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
         //render here
@@ -111,7 +112,6 @@ public class StatsScreen extends Screen {
         FormattedText descriptionVisitable = FormattedText.of(Component.translatable(Objects.requireNonNull(EtherRegistries.ETHER_STATS.getValue(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, statView.name()))).getTranslatableDescription()).getString());
         FormattedText statCompoundVisitable = FormattedText.of(statView.base() + " + " + (statView.getStatTotal() - statView.base()));
         FormattedText statModifiersVisitable = FormattedText.of(statView.statModifiersTranslated());
-        assert minecraft != null;
         List<FormattedCharSequence> title = minecraft.font.split(titleVisitable, viewWidth);
         List<FormattedCharSequence> description = minecraft.font.split(descriptionVisitable, viewWidth - 6);
         List<FormattedCharSequence> statCompound = minecraft.font.split(statCompoundVisitable, viewWidth);
@@ -136,7 +136,6 @@ public class StatsScreen extends Screen {
     }
 
     private void drawText(GuiGraphics context, List<FormattedCharSequence> text, int x, int y, int color) {
-        assert this.minecraft != null;
         Font textRenderer = this.minecraft.font;
 
         for(int i = 0; i < text.size(); ++i) {
@@ -168,7 +167,6 @@ public class StatsScreen extends Screen {
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
         this.minecraft.setScreen(this.parent);
     }
 }

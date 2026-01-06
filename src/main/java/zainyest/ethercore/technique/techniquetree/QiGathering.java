@@ -6,13 +6,7 @@ import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
-import java.util.List;
-
 public class QiGathering extends PassiveTechnique {
-    public QiGathering(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public QiGathering() {
         super("qi_gathering",
                 new Identifier[0],

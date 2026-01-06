@@ -14,10 +14,6 @@ public class PlayerData {
         return this.dirty;
     }
 
-    public void markDirty() {
-        this.dirty = true;
-    }
-
     public void markDirty(String key) {
         this.dirty = true;
         this.dirtyElements.add(key);

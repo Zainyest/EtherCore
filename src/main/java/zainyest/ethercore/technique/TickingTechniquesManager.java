@@ -39,10 +39,15 @@ public class TickingTechniquesManager {
         List<String> slatedForRemoval = new LinkedList<>();
 
         for (Map.Entry<String, Tag> entry : activeTechniques.entrySet()) {
-            String techniqueName = entry.getValue().asCompound().get().getString(NAME_KEY).orElseThrow();
-            UUID uuid = UUID.fromString(entry.getValue().asCompound().get().getString(UUID_KEY).orElseThrow());
+            String techniqueName = entry.getValue().asCompound().flatMap(compound -> compound.getString(NAME_KEY)).orElseThrow();
+            UUID uuid = UUID.fromString(entry.getValue().asCompound().flatMap(compound -> compound.getString(UUID_KEY)).orElseThrow());
             if (EtherRegistries.TECHNIQUES.containsKey(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, techniqueName))) {
-                ((TickingTechnique) EtherRegistries.TECHNIQUES.getValue(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, techniqueName))).tick(server, server.getPlayerList().getPlayer(uuid), slatedForRemoval);
+                TickingTechnique tickingTechnique = (TickingTechnique) EtherRegistries.TECHNIQUES.getValue(Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, techniqueName));
+                if (tickingTechnique == null) {
+                    EtherCore.LOGGER.atError().log("NULL TECHNIQUE FOUND: " + techniqueName);
+                    continue;
+                }
+                tickingTechnique.tick(server, server.getPlayerList().getPlayer(uuid), slatedForRemoval);
             } else {
                 EtherCore.LOGGER.atError().log("NO TECHNIQUE FOUND: " + techniqueName);
             }

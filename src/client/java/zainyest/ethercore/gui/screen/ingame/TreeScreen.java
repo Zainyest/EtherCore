@@ -18,6 +18,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Matrix3x2fStack;
+import org.jspecify.annotations.NonNull;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.technique.Technique;
@@ -63,8 +64,6 @@ public class TreeScreen extends Screen {
 
     @Override
     protected void init() {
-        if (this.minecraft == null) {return;}
-
         treeOffset_x = (double) (backgroundWidth - 16) / 2;
         treeOffset_y = (double) (backgroundHeight - 16) / 2;
 
@@ -102,7 +101,7 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void render(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
         //render here
@@ -258,7 +257,7 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
+    public boolean mouseDragged(@NonNull MouseButtonEvent click, double offsetX, double offsetY) {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         //TechniqueTree window (x, y, width, height): x+8, y+8, 160, 150
@@ -301,8 +300,8 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyEvent input) {
-        if (this.minecraft == null || this.minecraft.player == null) {return false;}
+    public boolean keyPressed(@NonNull KeyEvent input) {
+        if (this.minecraft.player == null) {return false;}
 
         this.searching = false;
         if (this.minecraft.player.isSpectator()) {
@@ -325,14 +324,14 @@ public class TreeScreen extends Screen {
     }
 
     @Override
-    public boolean keyReleased(KeyEvent input) {
+    public boolean keyReleased(@NonNull KeyEvent input) {
         this.searching = false;
         return super.keyReleased(input);
     }
 
     @Override
-    public boolean charTyped(CharacterEvent input) {
-        if (this.minecraft == null || this.minecraft.player == null) {return false;}
+    public boolean charTyped(@NonNull CharacterEvent input) {
+        if (this.minecraft.player == null) {return false;}
 
         if (this.searching) {
             return false;
@@ -381,7 +380,6 @@ public class TreeScreen extends Screen {
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
         this.minecraft.setScreen(this.parent);
     }
 

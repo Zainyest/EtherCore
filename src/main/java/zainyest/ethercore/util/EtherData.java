@@ -3,8 +3,10 @@ package zainyest.ethercore.util;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherpool.EtherPool;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
 import zainyest.ethercore.networking.payload.PlayerDataPayload;
@@ -35,7 +37,12 @@ public class EtherData {
                 CompoundTag nbtOut = new CompoundTag();
 
                 for (String key : playerData.getDirtyElements()) {
-                    nbtOut.put(key, playerData.getPersistentData().get(key));
+                    Tag dirtyElement = playerData.getPersistentData().get(key);
+                    if (dirtyElement == null) {
+                        EtherCore.LOGGER.atError().log("NULL NBT TAG FOUND: " + key);
+                        continue;
+                    }
+                    nbtOut.put(key, dirtyElement);
                 }
 
                 if (!nbtOut.isEmpty()) {

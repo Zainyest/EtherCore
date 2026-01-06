@@ -51,10 +51,6 @@ public class PlayerEtherStats {
 
     public static void updateStats(MinecraftServer server) {
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
-            if (serverPlayer == null) {
-                EtherCore.LOGGER.atError().log("Null Player, skipping tickPool");
-                continue;
-            }
             PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
             playerData.persistentData.put(PlayerEtherStats.PLAYER_ETHER_STATS_KEY, PlayerEtherStats.getOrCreateNbt(playerData));
             playerData.markDirty(PLAYER_ETHER_STATS_KEY);

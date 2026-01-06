@@ -5,8 +5,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 import static zainyest.ethercore.EtherCore.MOD_ID;
 
@@ -19,7 +19,7 @@ public record PlayerDataPayload(CompoundTag persistentData) implements CustomPac
             PlayerDataPayload::new);
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public @NonNull Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }

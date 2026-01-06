@@ -6,13 +6,7 @@ import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
-import java.util.List;
-
 public class MentalAcuity extends PassiveTechnique {
-    public MentalAcuity(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public MentalAcuity() {
         super("mental_acuity",
                 new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "qi_gathering")},

@@ -6,13 +6,7 @@ import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
-import java.util.List;
-
 public class BodyFortification extends PassiveTechnique {
-    public BodyFortification(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public BodyFortification() {
         super("body_fortification",
                 new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "qi_gathering")},

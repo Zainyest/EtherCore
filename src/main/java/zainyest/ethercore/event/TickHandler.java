@@ -3,6 +3,7 @@ package zainyest.ethercore.event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
+import org.jspecify.annotations.NonNull;
 import zainyest.ethercore.init.EtherRegistries;
 import zainyest.ethercore.technique.CausesWorldEvent;
 import zainyest.ethercore.technique.Technique;
@@ -12,7 +13,7 @@ import zainyest.ethercore.util.StateSaverAndLoader;
 
 public class TickHandler implements ServerTickEvents.StartTick {
     @Override
-    public void onStartTick(MinecraftServer server) {
+    public void onStartTick(@NonNull MinecraftServer server) {
         handlePlayers(server);
         handleTickingTechniques(server);
         decrementWorldlyTimers(server);

@@ -8,14 +8,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.init.Items;
-import zainyest.ethercore.init.Sounds;
 import zainyest.ethercore.technique.ActivatedTechnique;
 
 public class CreateTimeFrozenArmament extends ActivatedTechnique {
-    public CreateTimeFrozenArmament(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public CreateTimeFrozenArmament() {
         super("create_time_frozen_armament",
                 new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "time_manipulation")},

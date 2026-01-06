@@ -4,7 +4,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.Identifier;
-import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.PlayerData;
 import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.init.EtherRegistries;
@@ -18,7 +17,6 @@ public record TechniqueTree(String treeName, Technique rootTechnique) {
     }
 
     public void syncTree(ServerPlayer player) {
-        //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
         StateSaverAndLoader.getPlayerState(player).markDirty(treeName);
     }
 
@@ -32,10 +30,6 @@ public record TechniqueTree(String treeName, Technique rootTechnique) {
     /// TEMPORARY TEST, SHOULD ONLY UPDATE WHEN CHANGE DETECTED
     public void tickTree(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (player == null) {
-                EtherCore.LOGGER.info("Null Player, skipping tickPool");
-                return;
-            }
             PlayerData dataPlayer = StateSaverAndLoader.getPlayerState(player);
 
             recursiveUpdateTree(player, dataPlayer, this.rootTechnique);

@@ -12,6 +12,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.init.EtherRegistries;
 
@@ -27,7 +28,7 @@ public class TreeElementWidget extends AbstractWidget {
     private boolean selected = false;
     private boolean learned = false;
     private float angle = 0;
-    private TreeElementWidget parent;
+    private final TreeElementWidget parent;
     public LinkedList<TreeElementWidget> children = new LinkedList<>();
     public boolean matchesSearch = false;
 
@@ -55,14 +56,14 @@ public class TreeElementWidget extends AbstractWidget {
     }
 
     @Override
-    public void onClick(MouseButtonEvent click, boolean doubled) {
+    public void onClick(@NonNull MouseButtonEvent click, boolean doubled) {
         if (this.isHovered() && this.isSelectable()) {
             this.selected = !this.selected;
         }
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
+    public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
         if (this.isActive()) {
             if (this.isValidClickButton(click.buttonInfo())) {
                 boolean bl = this.isMouseOver(click.x(), click.y());
@@ -122,7 +123,7 @@ public class TreeElementWidget extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput builder) {}
+    protected void updateWidgetNarration(@NonNull NarrationElementOutput builder) {}
 
     public String getName() {
         return name;

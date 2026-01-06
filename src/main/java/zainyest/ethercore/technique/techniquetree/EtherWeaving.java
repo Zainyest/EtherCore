@@ -6,13 +6,7 @@ import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
-import java.util.List;
-
 public class EtherWeaving extends PassiveTechnique {
-    public EtherWeaving(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public EtherWeaving() {
         super("ether_weaving",
                 new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "ether_manipulation")},

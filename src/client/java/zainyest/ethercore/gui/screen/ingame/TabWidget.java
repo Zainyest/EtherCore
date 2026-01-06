@@ -7,6 +7,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 import zainyest.ethercore.EtherCore;
 
 public class TabWidget extends AbstractWidget {
@@ -36,7 +37,7 @@ public class TabWidget extends AbstractWidget {
     public boolean isCurrent() {return this.isCurrent;}
 
     @Override
-    public void onClick(MouseButtonEvent click, boolean doubled) {
+    public void onClick(@NonNull MouseButtonEvent click, boolean doubled) {
         if (this.isHovered()) {
             this.clickAction.onClick(this);
         }
@@ -49,7 +50,7 @@ public class TabWidget extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput builder) {}
+    protected void updateWidgetNarration(@NonNull NarrationElementOutput builder) {}
 
     public interface ClickAction {
         void onClick(TabWidget button);

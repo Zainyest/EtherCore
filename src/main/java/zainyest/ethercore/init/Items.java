@@ -13,7 +13,6 @@ import zainyest.ethercore.EtherCore;
 
 import java.util.function.Function;
 
-import static net.minecraft.world.item.Items.NETHERITE_SWORD;
 
 public class Items {
     public static final Item TIME_FROZEN_ARMAMENT = register(

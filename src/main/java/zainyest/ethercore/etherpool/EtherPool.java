@@ -3,7 +3,6 @@ package zainyest.ethercore.etherpool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherstat.PlayerEtherStats;
 import zainyest.ethercore.etherstat.PlayerEtherStatsView;
 import zainyest.ethercore.util.PlayerData;
@@ -33,9 +32,6 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
         return poolVal;
     }
 
-    public CompoundTag instantiateNbt() {
-        return toNbt(instantiateView());
-    }
     public EtherPoolView instantiateView() {
         return  new EtherPoolView(this.poolName, 0, 0, 0);
     }
@@ -64,13 +60,6 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
         return fromNbt(nbt);
     }
 
-    public CompoundTag getOrCreateNbt(PlayerData playerData) {
-        if (playerData.getPersistentData().getCompoundOrEmpty(this.poolName).isEmpty()) {
-            return instantiateNbt();
-        }
-        return toNbt(fromPlayerData(playerData));
-    }
-
     public EtherPoolView getOrCreateView(PlayerData playerData) {
         if (playerData.getPersistentData().getCompoundOrEmpty(this.poolName).isEmpty()) {
             return instantiateView();
@@ -79,17 +68,11 @@ public record EtherPool(String poolName, String volumeStat, String regenStat, do
     }
 
     public void syncPool(ServerPlayer player) {
-        //ServerPlayNetworking.send(player, new PlayerDataPayload(StateSaverAndLoader.getPlayerState(player).getPersistentData()));
-
         StateSaverAndLoader.getPlayerState(player).markDirty(this.poolName);
     }
 
     public void tickPool(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (player == null) {
-                EtherCore.LOGGER.info("Null Player, skipping tickPool");
-                return;
-            }
             PlayerData dataPlayer = StateSaverAndLoader.getPlayerState(player);
 
             EtherPoolView pre = getOrCreateView(dataPlayer);

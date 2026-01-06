@@ -21,10 +21,6 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, Ti
 
     public final String TIME_REMAINING = this.getName() + ".time_remaining";
 
-    public TimeStop(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public TimeStop() {
         super("time_stop",
                 new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "temporal_immunity")},
@@ -34,8 +30,10 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, Ti
     }
 
     private void begin(MinecraftServer server, ServerPlayer serverPlayer) {
-        //PlayerEtherStatsView playerStats =  PlayerEtherStats.fromPlayerData(StateSaverAndLoader.getPlayerState(serverPlayer));
-        //int duration = playerStats.statViewList().get(EtherStats.POWER.name()).getStatTotal() * 20; // duration in ticks
+        /* TODO: add stat dependence for duration
+         * PlayerEtherStatsView playerStats =  PlayerEtherStats.fromPlayerData(StateSaverAndLoader.getPlayerState(serverPlayer));
+         * int duration = playerStats.statViewList().get(EtherStats.POWER.name()).getStatTotal() * 20; // duration in ticks
+         */
         int duration = 30 * 20; // duration in ticks
         CompoundTag worldlyData = StateSaverAndLoader.getWorldlyData(server);
 

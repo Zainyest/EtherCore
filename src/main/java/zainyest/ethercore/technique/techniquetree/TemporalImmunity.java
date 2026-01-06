@@ -6,13 +6,7 @@ import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.technique.PassiveTechnique;
 
-import java.util.List;
-
 public class TemporalImmunity extends PassiveTechnique {
-    public TemporalImmunity(String name, Identifier[] parents, Identifier[] children, Identifier icon) {
-        super(name, parents, children, icon);
-    }
-
     public TemporalImmunity() {
         super("temporal_immunity",
                 new Identifier[]{Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "time_manipulation")},

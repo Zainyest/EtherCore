@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
-import org.apache.logging.log4j.core.pattern.NotANumber;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.EtherCoreClient;
 import zainyest.ethercore.etherpool.EtherPoolView;
@@ -19,7 +18,7 @@ public class EtherHudOverlay {
 
     public static void render(GuiGraphics context, DeltaTracker tickCounter) {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.player == null) {
+        if (client.player == null) {
             return;
         }
 
@@ -35,16 +34,10 @@ public class EtherHudOverlay {
         // render mental energy bar top left
         EtherPoolView mentalEnergy = EtherPools.MENTAL_ENERGY.fromPlayerData(EtherCoreClient.clientPlayerData);
         float mentalEnergyPercentFilled = ((float) mentalEnergy.val()) / ((float) mentalEnergy.max());
-//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 14, 0, 5, (int) (182*mentalEnergyPercentFilled), 5, 182,10, 0xff7f7fff);
-//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 14, 0, 0, 182, 5, 182,10);
-//        context.drawTextWithShadow(client.textRenderer, Text.literal(mentalEnergy.val() + "/" + mentalEnergy.max()).fillStyle(Style.EMPTY.withColor(Formatting.BLUE)), 188, 14, 0xff7f7fff);
 
         // render ether bar top left
         EtherPoolView ether = EtherPools.ETHER.fromPlayerData(EtherCoreClient.clientPlayerData);
         float etherPercentFilled = ((float) ether.val()) / ((float) ether.max());
-//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 24, 0, 5, (int) (182*etherPercentFilled), 5, 182,10);
-//        context.drawTexture(RenderPipelines.GUI_TEXTURED, ETHER_TEXTURE, 4, 24, 0, 0, 182, 5, 182,10);
-//        context.drawTextWithShadow(client.textRenderer, Text.literal(ether.val() + "/" + ether.max()).fillStyle(Style.EMPTY.withColor(Formatting.AQUA)), 188, 24, 0xff7fff7f);
 
         int x = 2;
         int y = context.guiHeight() - 42;
