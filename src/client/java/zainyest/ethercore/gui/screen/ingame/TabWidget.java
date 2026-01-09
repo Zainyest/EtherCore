@@ -46,7 +46,8 @@ public class TabWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         context.blit(RenderPipelines.GUI_TEXTURED, this.isCurrent ? TAB_HIGHLIGHTED_TEXTURE : TAB_TEXTURE, this.getX(), this.getY(), 0, 0, this.width, this.height, this.isCurrent ? 21 : 17, 20);
-        context.blit(RenderPipelines.GUI_TEXTURED, ICON_TEXTURE, this.getX() + 5, this.getY() + 5, 0, 0, 10, 10, 10, 10, this.isCurrent ? 0xFFFFFFFF : 0xDDFFFFFF);
+        int iconSize = 14;
+        context.blit(RenderPipelines.GUI_TEXTURED, ICON_TEXTURE, this.getX() + 10 - (iconSize / 2), this.getY() + 10 - (iconSize / 2), 0, 0, iconSize, iconSize, iconSize, iconSize, this.isCurrent ? 0xFFFFFFFF : 0xDDFFFFFF);
     }
 
     @Override

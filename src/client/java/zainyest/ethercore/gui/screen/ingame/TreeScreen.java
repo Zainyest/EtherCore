@@ -39,6 +39,7 @@ public class TreeScreen extends Screen {
 
     private static final Identifier TREE_SCREEN_BACKDROP = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_screen_backdrop.png");
     private static final Identifier CURRENT_TREE_VIEWPORT = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/meridiansscreen/tree_view_large.png");
+    public static final Identifier ICON_TEXTURE = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, "textures/gui/tab/skill_tree_symbol.png");
 
     private double treeOffset_x = 80, treeOffset_y = 75;
     private static final int treeTierOffset = 30;
@@ -71,10 +72,10 @@ public class TreeScreen extends Screen {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
 
-        TabWidget treeScreenTabWidget = new TabWidget(x - 17, y + 22, true, (btn) -> {});
+        TabWidget treeScreenTabWidget = new TabWidget(ICON_TEXTURE, x - 17, y + 22, true, (btn) -> {});
         this.addRenderableWidget(treeScreenTabWidget);
 
-        TabWidget statsScreenTabWidget = new TabWidget(x - 17, y + 22*2, false, (btn) -> Minecraft.getInstance().setScreen(new StatsScreen()));
+        TabWidget statsScreenTabWidget = new TabWidget(StatsScreen.ICON_TEXTURE, x - 17, y + 22*2, false, (btn) -> Minecraft.getInstance().setScreen(new StatsScreen()));
         this.addRenderableWidget(statsScreenTabWidget);
 
         TabWidget techniqueManagerScreenTabWidget = new TabWidget(x - 17, y + 22*3, false, (btn) -> Minecraft.getInstance().setScreen(new TreeScreen()));
