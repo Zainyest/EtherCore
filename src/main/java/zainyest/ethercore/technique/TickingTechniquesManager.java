@@ -47,7 +47,7 @@ public class TickingTechniquesManager {
                     EtherCore.LOGGER.atError().log("NULL TECHNIQUE FOUND: " + techniqueName);
                     continue;
                 }
-                tickingTechnique.tick(server, server.getPlayerList().getPlayer(uuid), slatedForRemoval);
+                tickingTechnique.tick(server, uuid, slatedForRemoval);
             } else {
                 EtherCore.LOGGER.atError().log("NO TECHNIQUE FOUND: " + techniqueName);
             }

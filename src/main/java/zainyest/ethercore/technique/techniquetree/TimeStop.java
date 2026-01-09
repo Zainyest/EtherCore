@@ -16,6 +16,7 @@ import zainyest.ethercore.technique.TickingTechniquesManager;
 import zainyest.ethercore.util.StateSaverAndLoader;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, TickingTechnique {
 
@@ -48,18 +49,29 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, Ti
         server.tickRateManager().setFrozen(true);
     }
 
-    private void tryEnd(MinecraftServer server, ServerPlayer serverPlayer, List<String> slatedForRemoval) {
+    private void tryEnd(MinecraftServer server, UUID uuid, List<String> slatedForRemoval) {
         CompoundTag worldlyData = StateSaverAndLoader.getWorldlyData(server);
+        ServerPlayer serverPlayer = server.getPlayerList().getPlayer(uuid);
 
         if (worldlyData.contains(TIME_REMAINING)) {
             if (worldlyData.getInt(TIME_REMAINING).orElse(0) <= 0) {
                 worldlyData.remove(TIME_REMAINING);
                 server.tickRateManager().setFrozen(false);
+                if (serverPlayer == null) {
+                    server.getPlayerList().getPlayers().forEach(player -> player.level().playSound(null, player.blockPosition(), Sounds.TIME_RESUME, SoundSource.PLAYERS, 1f, 1f));
+                    slatedForRemoval.add(this.getName() + "." + uuid);
+                    return;
+                }
                 serverPlayer.level().playSound(null, serverPlayer.blockPosition(), Sounds.TIME_RESUME, SoundSource.PLAYERS, 1f, 1f);
                 slatedForRemoval.add(this.getName() + "." + serverPlayer.getStringUUID());
             }
         } else {
             server.tickRateManager().setFrozen(false);
+            if (serverPlayer == null) {
+                server.getPlayerList().getPlayers().forEach(player -> player.level().playSound(null, player.blockPosition(), Sounds.TIME_RESUME, SoundSource.PLAYERS, 1f, 1f));
+                slatedForRemoval.add(this.getName() + "." + uuid);
+                return;
+            }
             serverPlayer.level().playSound(null, serverPlayer.blockPosition(), Sounds.TIME_RESUME, SoundSource.PLAYERS, 1f, 1f);
             slatedForRemoval.add(this.getName() + "." + serverPlayer.getStringUUID());
         }
@@ -74,8 +86,8 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, Ti
 
     /// Should only be called if this.isActive(serverPlayer) == true
     @Override
-    public void tick(MinecraftServer server, ServerPlayer serverPlayer, List<String> slatedForRemoval) {
-        tryEnd(server, serverPlayer, slatedForRemoval);
+    public void tick(MinecraftServer server, UUID uuid, List<String> slatedForRemoval) {
+        tryEnd(server, uuid, slatedForRemoval);
     }
 
     @Override
