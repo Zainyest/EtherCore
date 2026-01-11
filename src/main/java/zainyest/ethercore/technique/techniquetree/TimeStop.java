@@ -35,7 +35,7 @@ public class TimeStop extends ActivatedTechnique implements CausesWorldEvent, Ti
          * PlayerEtherStatsView playerStats =  PlayerEtherStats.fromPlayerData(StateSaverAndLoader.getPlayerState(serverPlayer));
          * int duration = playerStats.statViewList().get(EtherStats.POWER.name()).getStatTotal() * 20; // duration in ticks
          */
-        int duration = 30 * 20; // duration in ticks
+        int duration = 10 * 20; // duration in ticks
         CompoundTag worldlyData = StateSaverAndLoader.getWorldlyData(server);
 
         if (!worldlyData.contains(TIME_REMAINING)) {

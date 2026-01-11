@@ -1,9 +1,10 @@
 {
   "required": true,
   "package": "zainyest.ethercore.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin",
+    "ServerLevelTickMixin",
     "TickRateManagerMixin"
   ],
   "injectors": {

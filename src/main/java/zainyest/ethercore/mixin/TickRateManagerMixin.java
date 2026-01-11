@@ -21,16 +21,29 @@ public abstract class TickRateManagerMixin {
 
     @Inject(at = @At("HEAD"), method = "isEntityFrozen", cancellable = true)
     private void shouldSkipTick(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        boolean dirty = false;
+        boolean returnVal = false;
         if (entity instanceof Player && this.isFrozen()) {
             if (((Player) entity).gameMode() == GameType.SURVIVAL || ((Player) entity).gameMode() == GameType.ADVENTURE) {
-                cir.setReturnValue(true);
+                dirty = true;
+                returnVal = true;
             }
         }
 
-        if (entity instanceof LivingEntity && this.isFrozen()) {
+        if (entity instanceof LivingEntity && this.isFrozen() && entity.asLivingEntity() != null) {
             if (Objects.requireNonNull(entity.asLivingEntity()).hasEffect(StatusEffects.TEMPORAL_IMMUNITY_EFFECT)) {
-                cir.setReturnValue(false);
+                dirty = true;
+                returnVal = false;
             }
+        }
+
+        if (entity.level().isClientSide()) { // Unfreeze client-side entities
+            dirty = true;
+            returnVal = false;
+        }
+
+        if (dirty) {
+            cir.setReturnValue(returnVal);
         }
     }
 }

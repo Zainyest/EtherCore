@@ -18,7 +18,7 @@ public class Items {
     public static final Item TIME_FROZEN_ARMAMENT = register(
             "time_frozen_armament",
             Item::new,
-            new Item.Properties().sword(ToolMaterial.NETHERITE, 1f, 1f));
+            new Item.Properties().sword(ToolMaterial.NETHERITE, 1f, 1f).fireResistant());
 
     public static Item register(String name, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, name));
