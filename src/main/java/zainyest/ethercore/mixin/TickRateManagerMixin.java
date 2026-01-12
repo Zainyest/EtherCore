@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import zainyest.ethercore.init.StatusEffects;
+import zainyest.ethercore.init.DataAttachments;
 
 import java.util.Objects;
 
@@ -31,15 +31,10 @@ public abstract class TickRateManagerMixin {
         }
 
         if (entity instanceof LivingEntity && this.isFrozen() && entity.asLivingEntity() != null) {
-            if (Objects.requireNonNull(entity.asLivingEntity()).hasEffect(StatusEffects.TEMPORAL_IMMUNITY_EFFECT)) {
+            if (Boolean.TRUE.equals(Objects.requireNonNull(entity.asLivingEntity()).getAttached(DataAttachments.IS_TEMPORALLY_IMMUNE))) {
                 dirty = true;
                 returnVal = false;
             }
-        }
-
-        if (entity.level().isClientSide()) { // Unfreeze client-side entities
-            dirty = true;
-            returnVal = false;
         }
 
         if (dirty) {

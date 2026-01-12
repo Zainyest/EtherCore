@@ -3,8 +3,7 @@
   "package": "zainyest.ethercore.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ExampleMixin",
-    "ServerLevelTickMixin",
+    "LivingEntityOnEffectsRemovedMixin",
     "TickRateManagerMixin"
   ],
   "injectors": {
