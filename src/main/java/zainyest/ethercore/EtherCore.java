@@ -44,6 +44,7 @@ public class EtherCore implements ModInitializer {
         StatusEffects.init();
         Sounds.init();
         Items.init();
+        ConsumeEffectTypes.init();
     }
 
     public static Identifier id(String path) {

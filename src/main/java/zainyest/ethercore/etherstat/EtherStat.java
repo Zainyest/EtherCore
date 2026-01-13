@@ -1,6 +1,7 @@
 package zainyest.ethercore.etherstat;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import zainyest.ethercore.EtherCore;
 
 import java.util.LinkedHashMap;
@@ -32,7 +33,9 @@ public record EtherStat(String name, int base) {
         int base;
         LinkedHashMap<String, Integer> statModifiers = new LinkedHashMap<>();
         base = nbt.getInt("base").orElse(this.base);
-        nbt.getCompoundOrEmpty("modifiers").entrySet().forEach((entry) -> statModifiers.put(entry.getKey(), entry.getValue().asInt().orElse(0)));
+        for (Map.Entry<String, Tag> entry : nbt.getCompoundOrEmpty("modifiers").entrySet()) {
+            statModifiers.put(entry.getKey(), entry.getValue().asInt().orElse(0));
+        }
         return new EtherStatView(this.name, base, statModifiers);
     }
 

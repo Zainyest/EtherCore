@@ -1,5 +1,6 @@
 package zainyest.ethercore.init;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvent;
@@ -13,6 +14,11 @@ public class Sounds {
     private static SoundEvent registerSound(String sound) {
         Identifier id = Identifier.fromNamespaceAndPath(EtherCore.MOD_ID, sound);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
+    }
+
+    private static Holder.Reference<SoundEvent> registerForHolder(String name) {
+        Identifier id = EtherCore.id(name);
+        return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
     public static void init() {

@@ -8,9 +8,9 @@ import java.util.Map;
 
 public record EtherStatView(String name, int base, LinkedHashMap<String, Integer> statModifiers) {
     public int getStatTotal() {
-        int total = base;
-        for (int e : statModifiers.sequencedValues()) {
-            total += e;
+        int total = this.base();
+        for (Map.Entry<String, Integer> entry : statModifiers.entrySet()) {
+            total += entry.getValue();
         }
         return total;
     }
@@ -19,8 +19,8 @@ public record EtherStatView(String name, int base, LinkedHashMap<String, Integer
         StringBuilder out = new StringBuilder();
 
         for (Map.Entry<String, Integer> entry : this.statModifiers().sequencedEntrySet()) {
-            String translatableKey = EtherCore.MOD_ID + ".text." + this.name() + ".modifier." + entry.getKey();
-            out.append(Component.translatable(translatableKey)).append(": ").append(entry.getValue().toString());
+            String translatableKey = EtherCore.MOD_ID + ".text.modifier." + entry.getKey();
+            out.append(Component.translatable(translatableKey).getString()).append(": ").append(entry.getValue().toString());
             out.append("\n");
         }
 

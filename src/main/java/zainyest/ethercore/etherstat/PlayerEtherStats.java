@@ -1,12 +1,9 @@
 package zainyest.ethercore.etherstat;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.Identifier;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.util.PlayerData;
-import zainyest.ethercore.util.StateSaverAndLoader;
 import zainyest.ethercore.init.EtherRegistries;
 
 import java.util.LinkedHashMap;
@@ -37,7 +34,7 @@ public class PlayerEtherStats {
         CompoundTag nbt = playerData.getPersistentData().getCompoundOrEmpty(PLAYER_ETHER_STATS_KEY);
         LinkedHashMap<String, EtherStatView> statViewList = new LinkedHashMap<>();
         for (EtherStat stat : EtherRegistries.ETHER_STATS) {
-            statViewList.put(stat.name(), stat.fromNbt(nbt.getCompoundOrEmpty(stat.name())));
+            statViewList.put(stat.name(), stat.fromNbt(nbt));
         }
         return new PlayerEtherStatsView(statViewList);
     }
@@ -49,11 +46,14 @@ public class PlayerEtherStats {
         return toNbt(fromPlayerData(playerData));
     }
 
-    public static void updateStats(MinecraftServer server) {
-        for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
-            PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
-            playerData.persistentData.put(PlayerEtherStats.PLAYER_ETHER_STATS_KEY, PlayerEtherStats.getOrCreateNbt(playerData));
-            playerData.markDirty(PLAYER_ETHER_STATS_KEY);
-        }
-    }
+//    public static void updateStats(MinecraftServer server) {
+//        for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
+//            PlayerData playerData = StateSaverAndLoader.getPlayerState(serverPlayer);
+//            if (playerData.getDirtyElements().contains(PLAYER_ETHER_STATS_KEY)) {
+//                continue;
+//            }
+//            playerData.persistentData.put(PlayerEtherStats.PLAYER_ETHER_STATS_KEY, PlayerEtherStats.getOrCreateNbt(playerData));
+//            playerData.markDirty(PLAYER_ETHER_STATS_KEY);
+//        }
+//    }
 }

@@ -21,7 +21,6 @@ public class TickHandler implements ServerTickEvents.StartTick {
 
     private void handlePlayers(MinecraftServer server) {
         //Modify PlayerData
-        EtherData.updatePlayerStats(server);
         EtherData.updateTrees(server);
         EtherData.tickPools(server);
         //Send packets to dirty players

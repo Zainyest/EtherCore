@@ -1,0 +1,11 @@
+{
+  "values": [
+    "ethercore:strength",
+    "ethercore:dexterity",
+    "ethercore:vigor",
+    "ethercore:endurance",
+    "ethercore:vitality",
+    "ethercore:recovery",
+    "ethercore:perception"
+  ]
+}

@@ -8,7 +8,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import zainyest.ethercore.EtherCore;
 import zainyest.ethercore.etherpool.EtherPool;
-import zainyest.ethercore.etherstat.PlayerEtherStats;
 import zainyest.ethercore.networking.payload.PlayerDataPayload;
 import zainyest.ethercore.technique.TechniqueTree;
 import zainyest.ethercore.init.EtherRegistries;
@@ -24,10 +23,6 @@ public class EtherData {
         for (TechniqueTree tree : EtherRegistries.TECHNIQUE_TREES) {
             tree.tickTree(server);
         }
-    }
-
-    public static void updatePlayerStats(MinecraftServer server) {
-        PlayerEtherStats.updateStats(server);
     }
 
     public static void sendPlayerDataPayloads(MinecraftServer server) {
